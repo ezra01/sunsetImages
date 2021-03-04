@@ -245,6 +245,16 @@ public class test3  {
 	      List<Person> personList= new ArrayList<Person>();
 	      person= new Person();
 	      personList.add(new Person("root", "pass1234", "samplefname", "samplelname", "Male", "2020-02-20"));
+	      personList.add(new Person("tNelms@gmail.com", "pass1", "Tom", "Nelms", "Male", "1986-12-11"));
+	      personList.add(new Person("rHou@gmail.com", "pass2", "Roxie", "Hou", "Female", "1990-09-09"));
+	      personList.add(new Person("eProchaska@gmail.com", "pass3", "Ela", "Prochaska", "Female", "1991-06-20"));
+	      personList.add(new Person("rLeis@gmail.com", "pass4", "Rickie", "Leis", "Male", "1991-09-27"));
+	      personList.add(new Person("eCrawford@gmail.com", "pass5", "Evelyne", "Crawford", "Female", "1992-09-05"));
+	      personList.add(new Person("bIwamoto@gmail.com", "pass6", "Bradly", "Iwamoto", "Male", "1995-03-05"));
+	      personList.add(new Person("lKirker@gmail.com", "pass7", "Lucio", "Kirker", "Male", "1996-02-03"));
+	      personList.add(new Person("cLockwood@gmail.com", "pass8", "Carli", "Lockwood", "Female", "1996-12-05"));
+	      personList.add(new Person("iTheobald@gmail.com", "pass9", "Ignacio", "Theobald", "Male", "1998-12-03"));
+	      personList.add(new Person("pRisser@gmail.com", "pass10", "Phyllis", "Risser", "Female", "2000-05-18"));
 	      	preparedStatement = connect.prepareStatement(sqlInsert1);
 	      	for(Person x: personList) {
 	      		preparedStatement.setString(1, x.getEmail());
