@@ -7,6 +7,8 @@
 <title>Sunset</title>
 </head>
 <body>
-
+	<form action="resetDatabase" method="post">
+	<input type="button" value="Initialize Database" />
+	</form>
 </body>
 </html>
