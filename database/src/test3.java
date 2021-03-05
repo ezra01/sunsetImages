@@ -167,9 +167,10 @@ public class test3  {
 	    		"imgId INT auto_increment NOT NULL," + 
 	    		"url VARCHAR(500) NOT NULL," + 
 	    		"details VARCHAR(500)," + 
-	    		"created TIMESTAMP," + 
+	    		"created TIMESTAMP DEFAULT CURRENT_TIMESTAMP," + 
 	    		"PRIMARY KEY(imgId)" + 
 	    		");";
+	    
 	    String sqlCreate3="CREATE TABLE tag(" + 
 	    		"tagId INT auto_increment NOT NULL," + 
 	    		"word VARCHAR(25)," + 
@@ -240,7 +241,23 @@ public class test3  {
 	      statement.executeUpdate(sqlCreate6); // posts table
 	      statement.executeUpdate(sqlCreate7); // comments table
 	      statement.executeUpdate(sqlCreate8); // follower table
-
+	     
+	      List<String> imageList = new ArrayList<String>();
+	      imageList.add(" insert into image(url,details) values (\"https://images.unsplash.com/photo-1611095560396-89216a352761?ixid=MXwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80\",\"DocuSign from Unsplash.com\")");
+	      imageList.add(" insert into image(url,details) values (\"https://images.unsplash.com/photo-1614862053138-10ca7a58866e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1525&q=80\",\"Antelope Canyon (IG: @clay.banks)\")");
+	      imageList.add(" insert into image(url,details) values (\"https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?ixid=MXwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80\",\"Dell XPS Designed to be the Best\")");
+	      imageList.add(" insert into image(url,details) values (\"https://images.unsplash.com/photo-1614640005509-2b10151cf3b1?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80\",\"Kyoto,Japan Photo Courtesy of Riccardo Mancino\")");
+	      imageList.add(" insert into image(url,details) values (\"https://images.unsplash.com/photo-1614687150515-f82d2a1ce260?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80\",\"Photo Courtesy of Mitchel Luo\")");
+	      imageList.add(" insert into image(url,details) values (\"https://images.unsplash.com/photo-1614620304143-4b762783a93d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80\",\"Photo Photo Courtesy of Alex Quezada\")");
+	      imageList.add(" insert into image(url,details) values (\"https://images.unsplash.com/photo-1614815099662-55eb56815d4d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80\",\"Photo Courtesy of Marco De Hevia\")");
+	      imageList.add(" insert into image(url,details) values (\"https://images.unsplash.com/photo-1610346915620-6819c46e0544?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80\",\"Photo Courtesy of Jack Irwin\")");
+	      imageList.add(" insert into image(url,details) values (\"https://images.unsplash.com/photo-1614680889612-d82e69f49ea2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80\",\"Photo Courtesy of Liza Azorina\")");
+	      imageList.add(" insert into image(url,details) values (\"https://images.unsplash.com/photo-1614694871663-f80b4e1decb6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80\",\"Photo Courtesy of Ingmar\")");
+	      for(String x: imageList) {
+	    	  statement.addBatch(x);
+	      }
+	      statement.executeBatch();
+	      
 	      Person person;
 	      List<Person> personList= new ArrayList<Person>();
 	      person= new Person();
