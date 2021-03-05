@@ -177,6 +177,7 @@ public class test3  {
 	    		"primary key(tagID)," + 
 	    		"UNIQUE(word) " + 
 	    		");";
+	    
 	    String sqlCreate4 ="CREATE TABLE contain(" + 
 	    		"imgId INT  NOT NULL," + 
 	    		"tagId INT  NOT NULL," + 
@@ -241,7 +242,7 @@ public class test3  {
 	      statement.executeUpdate(sqlCreate6); // posts table
 	      statement.executeUpdate(sqlCreate7); // comments table
 	      statement.executeUpdate(sqlCreate8); // follower table
-	     
+	     //images
 	      List<String> imageList = new ArrayList<String>();
 	      imageList.add(" insert into image(url,details) values (\"https://images.unsplash.com/photo-1611095560396-89216a352761?ixid=MXwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80\",\"DocuSign from Unsplash.com\")");
 	      imageList.add(" insert into image(url,details) values (\"https://images.unsplash.com/photo-1614862053138-10ca7a58866e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1525&q=80\",\"Antelope Canyon (IG: @clay.banks)\")");
@@ -257,7 +258,7 @@ public class test3  {
 	    	  statement.addBatch(x);
 	      }
 	      statement.executeBatch();
-	      
+	      //person
 	      Person person;
 	      List<Person> personList= new ArrayList<Person>();
 	      person= new Person();
@@ -283,8 +284,20 @@ public class test3  {
 	      	preparedStatement.addBatch();
 	      	}
 	      	preparedStatement.executeBatch();
-	      	
-	      	
+	      	//tag 
+	      	List<String> tagList = new ArrayList<String>();
+	      	 tagList.add("insert into tag(word) values (\"landscape\"),(\"animals\"),(\"beautiful\"),(\"cool\"),(\"creativity\"),(\"social\"),(\"bright\"),(\"vision\"),(\"passion\"),(\"morning\")");
+	      	for(String x: tagList) {
+		    	  statement.addBatch(x);
+		      }
+		      statement.executeBatch();
+		    //
+		      List<String> containList = new ArrayList<String>();
+		      	 containList.add("insert into contain(imgId,tagId) values (1,6),(2,4),(3,8),(5,9),(6,10),(7,2),(8,5),(9,7),(4,3),(10,1)");
+		      	for(String x: containList) {
+			    	  statement.addBatch(x);
+			      }
+			      statement.executeBatch();
 	      	
 	    } catch (Exception e) {
 	         System.out.println(e);
