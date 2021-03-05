@@ -7,8 +7,9 @@
 <title>Sunset</title>
 </head>
 <body>
+<h2 style= "text-align: center;">Feed Page</h2>
 	<form action="resetDatabase" method="post">
-	<input type="button" value="Initialize Database" />
+	<input type="submit" value="Initialize Database" />
 	</form>
 </body>
 </html>
