@@ -218,13 +218,13 @@ public class test3  {
 	      // Setup the connection with the DB
 	    if (connect == null || connect.isClosed()) {
             try {
-                Class.forName("com.mysql.jdbc.Driver");
+                Class.forName("com.mysql.cj.jdbc.Driver");
             } catch (ClassNotFoundException e) {
                 throw new SQLException(e);
             }}
 	      connect = DriverManager
 	          .getConnection("jdbc:mysql://localhost:3306/sunsetdb?"
-	              + "useSSL=false&user=john&password=pass1234");
+	              + "allowPublicKeyRetrieval=true&useSSL=false&user=john&password=pass1234");
 
 	        
 

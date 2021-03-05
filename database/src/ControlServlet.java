@@ -49,7 +49,6 @@ public class ControlServlet extends HttpServlet {
             	break;
             case "/signUp":
             	insertPerson(request,response);
-            	response.sendRedirect("feed");
             	break;
             case "/login":
             	verifyAccount(request,response);
@@ -100,7 +99,19 @@ public class ControlServlet extends HttpServlet {
         String gender = request.getParameter("gender");
         String birthday = request.getParameter("dob");
         Person newPeople = new Person(email, pw, fname, lname, gender, birthday);
-        personDAO.insert(newPeople);
+        if(	!ifExists(email)	) {
+        	System.out.println("email is free");
+        	personDAO.insert(newPeople);
+        	response.sendRedirect("feed");
+        }
+        else {
+        	String msg= "UserName already exists.";
+        	System.out.println("email is taken");
+        	request.setAttribute("message",msg);
+        	try {
+        	showRegistration(request,response); // by using foward, we do not ping the servlet!
+        	}catch(Exception e) {System.out.println("foward Exception--InsertPerson function");}
+        	}
        // The sendRedirect() method works at client side and sends a new request
     }
     private void verifyAccount(HttpServletRequest request, HttpServletResponse response)
@@ -121,6 +132,16 @@ public class ControlServlet extends HttpServlet {
         	//password is different
         	response.sendRedirect("toLogin");
     	}
+    }
+    
+  //checks if username exists, returns boolean values
+    private boolean ifExists(String email)
+            throws SQLException, IOException {
+    PersonDAO personDAO = new PersonDAO();
+    Person p1 = new Person();
+    p1=personDAO.getPerson(email);
+    if(p1.getEmail()!=null) {	System.out.println("email is taken"); return true;    }
+    else {	System.out.println("email is free");return false;	}
     }
    
 
