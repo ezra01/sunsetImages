@@ -100,13 +100,11 @@ public class ControlServlet extends HttpServlet {
         String birthday = request.getParameter("dob");
         Person newPeople = new Person(email, pw, fname, lname, gender, birthday);
         if(	!ifExists(email)	) {
-        	System.out.println("email is free");
         	personDAO.insert(newPeople);
         	response.sendRedirect("feed");
         }
         else {
         	String msg= "UserName already exists.";
-        	System.out.println("email is taken");
         	request.setAttribute("message",msg);
         	try {
         	showRegistration(request,response); // by using foward, we do not ping the servlet!
@@ -117,7 +115,6 @@ public class ControlServlet extends HttpServlet {
     private void verifyAccount(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
     	String email = request.getParameter("email");
-    	System.out.println("Email in is:"+email);
         String pw = request.getParameter("pw");
         PersonDAO personDAO = new PersonDAO();
         Person p1 = new Person();
@@ -140,8 +137,8 @@ public class ControlServlet extends HttpServlet {
     PersonDAO personDAO = new PersonDAO();
     Person p1 = new Person();
     p1=personDAO.getPerson(email);
-    if(p1.getEmail()!=null) {	System.out.println("email is taken"); return true;    }
-    else {	System.out.println("email is free");return false;	}
+    if(p1.getEmail()!=null) {	return true;    }
+    else {	return false;	}
     }
    
 

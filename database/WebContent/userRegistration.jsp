@@ -11,8 +11,16 @@
 	<div class="errorMsg" style="color:red;font-size:24px;" >
 		<%String msg =(String)request.getAttribute("message");	if(msg!=null){out.print(msg);}%>
 	</div>
-				
-	<form action="signUp" method="post">
+	<script type = "text/javascript">  
+	function registrationValidation2(){ 
+		if(document.getElementById("pw").value !== document.getElementById("pw2").value){
+			alert("Passwords do not match!");
+			document.registrationForm.pw2.focus(); 
+			return false;	}
+		else{return true;}
+	}
+	</script>		
+	<form action="signUp" method="post" name = "registrationForm" onsubmit="return registrationValidation2()">
 	<table border="1" cellpadding="5">
 		<tr>
           <th>Username</th>
@@ -20,11 +28,11 @@
    		</tr>
    		<tr>
           <th>Password</th>
-          <td><input  type="password" name="pw" size="50" value="" onkeyup="this.setAttribute('value', this.value);" required></td>
+          <td><input  type="password" name="pw" id ="pw" size="50" value="" onkeyup="this.setAttribute('value', this.value);" required></td>
     	</tr>
     	<tr>
           <th>Confirm Password</th>
-          <td><input  type="password" name="pw2" size="50" value="" onkeyup="this.setAttribute('value', this.value);" required></td>
+          <td><input  type="password" name="pw2" id ="pw2" size="50" value="" onkeyup="this.setAttribute('value', this.value);" required></td>
     	</tr>
     	<tr>
           <th>First Name</th>
