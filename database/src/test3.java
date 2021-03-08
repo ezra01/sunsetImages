@@ -284,20 +284,60 @@ public class test3  {
 	      	preparedStatement.addBatch();
 	      	}
 	      	preparedStatement.executeBatch();
-	      	//tag 
+	      	// tag List
 	      	List<String> tagList = new ArrayList<String>();
 	      	 tagList.add("insert into tag(word) values (\"landscape\"),(\"animals\"),(\"beautiful\"),(\"cool\"),(\"creativity\"),(\"social\"),(\"bright\"),(\"vision\"),(\"passion\"),(\"morning\")");
 	      	for(String x: tagList) {
 		    	  statement.addBatch(x);
 		      }
-		      statement.executeBatch();
-		    //
+		    statement.executeBatch();
+		    // Container List
 		      List<String> containList = new ArrayList<String>();
 		      	 containList.add("insert into contain(imgId,tagId) values (1,6),(2,4),(3,8),(5,9),(6,10),(7,2),(8,5),(9,7),(4,3),(10,1)");
 		      	for(String x: containList) {
 			    	  statement.addBatch(x);
-			      }
-			      statement.executeBatch();
+		      		}
+		      statement.executeBatch();
+		      // Likes List
+			  List<String> likesList = new ArrayList<String>();
+			  likesList.add("insert into likes(email,imgId) values (\"tNelms@gmail.com\",6),(\"bIwamoto@gmail.com\",4),(\"bIwamoto@gmail.com\",8),(\"lKirker@gmail.com\",9),(\"iTheobald@gmail.com\",10),(\"pRisser@gmail.com\",2),(\"rHou@gmail.com\",5),(\"cLockwood@gmail.com\",7),(\"iTheobald@gmail.com\",3),(\"iTheobald@gmail.com\",1)");
+			     for(String x: likesList) {
+				    statement.addBatch(x);
+				 	}
+			  statement.executeBatch();
+			  // Posts List--Must be after image and person
+			  List<String> postsList = new ArrayList<String>();
+			  postsList.add("insert into posts(email,imgId) values (\"tNelms@gmail.com\",1),(\"rHou@gmail.com\",2),(\"eProchaska@gmail.com\",3),(\"rLeis@gmail.com\",4),(\"eCrawford@gmail.com\",5),(\"bIwamoto@gmail.com\",6),(\"lKirker@gmail.com\",7),(\"cLockwood@gmail.com\",8),(\"iTheobald@gmail.com\",9),(\"pRisser@gmail.com\",10)");
+			     for(String x: postsList) {
+				    statement.addBatch(x);
+				 	}
+			  statement.executeBatch();
+			// Posts List--Must be after image and person
+			  List<String> commentsList = new ArrayList<String>();
+			  commentsList.add("insert into comments(email,imgId,detail) values "+
+					  			"(\"tNelms@gmail.com\",1, \"Wow! Take a good look at this photo friends, friends.\" ),"+
+					  			"(\"rHou@gmail.com\",1,\"Impressive photo!\" ),"+
+					  			"(\"eProchaska@gmail.com\",3,\"I don't Like this at all.. D:\" ),"+
+					  			"(\"eCrawford@gmail.com\",3,\"You deserve more praise. Keep on working hard.\" ),"+
+					  			"(\"eProchaska@gmail.com\",5,\"You're photos are bad. You need to take a class or soemthing.\" ),"+
+					  			"(\"lKirker@gmail.com\",6,\"Hang in there!\" ),"+
+					  			"(\"eProchaska@gmail.com\",7,\"Good weork kiddo. Back in my day we had to have over 300 confirmed shots before even training in black room development.\" ),"+
+					  			"(\"eCrawford@gmail.com\",7,\"This is a great work. You must be related to Van Gogh!\" ),"+
+					  			"(\"lKirker@gmail.com\",9,\"I like this!\" ),"+
+					  			"(\"lKirker@gmail.com\",1,\"I like this!\" )"
+					  			);
+			     for(String x: commentsList) {
+				    statement.addBatch(x);
+				 	}
+			  statement.executeBatch();
+			// Posts List--Must be after image and person
+			  List<String> followerList = new ArrayList<String>();
+			  followerList.add("insert into follower(idol,fan) values(\"tNelms@gmail.com\",\"rHou@gmail.com\"),( \"rHou@gmail.com\",\"eProchaska@gmail.com\" ),(\"rLeis@gmail.com\" , \"bIwamoto@gmail.com\" ),( \"lKirker@gmail.com\", \"cLockwood@gmail.com\"),( \"cLockwood@gmail.com\", \"lKirker@gmail.com\" ),( \"cLockwood@gmail.com\",\"iTheobald@gmail.com\" ),( \"cLockwood@gmail.com\",\"rHou@gmail.com\" ),(\"iTheobald@gmail.com\" ,\"rHou@gmail.com\" ),(\"rHou@gmail.com\" ,\"pRisser@gmail.com\" ),( \"pRisser@gmail.com\", \"eProchaska@gmail.com\") ");
+			     for(String x: followerList) {
+				    statement.addBatch(x);
+				 	}
+			  statement.executeBatch();
+			
 	      	
 	    } catch (Exception e) {
 	         System.out.println(e);
