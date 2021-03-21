@@ -11,5 +11,6 @@
 	<form action="resetDatabase" method="post">
 	<input type="submit" value="Initialize Database" />
 	</form>
+	<a href="postPage.jsp">Post Image</a>
 </body>
 </html>

@@ -10,6 +10,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Cookie;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -37,6 +38,9 @@ public class ControlServlet extends HttpServlet {
  
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	Cookie ck[] = request.getCookies();
+    	String user = ck[0].getValue();
+    	
         String action = request.getServletPath();
         System.out.println(action);
         try {
@@ -56,9 +60,26 @@ public class ControlServlet extends HttpServlet {
             case "/feed":
             	showFeed(request,response);
             	break;
+            case "/toPost":
+            	System.out.println("ucu");
+            	showPost(request, response);
+            	System.out.println("cuc");
+            	break;
+            case "/post":
+            	post(request, response);
+            	break;
+            case "/follow":
+            	follow(request, response);
+            	break;
             case "/resetDatabase":
             	// userShould be restricted or verified
-            	test3.run(); //Initialize database
+        		System.out.println("started");
+            	if(user.equals("root")) {
+            		System.out.println("verified");
+            		test3.run(); //Initialize database
+            	}
+            	System.out.println("finished");
+            	
             	response.sendRedirect("feed");
             	break;
             default:          	
@@ -85,6 +106,12 @@ public class ControlServlet extends HttpServlet {
     private void showFeed(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("feedPage.jsp");
+        dispatcher.forward(request, response);
+    }
+    
+    private void showPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("postPage.jsp");
         dispatcher.forward(request, response);
     }
     
@@ -123,6 +150,8 @@ public class ControlServlet extends HttpServlet {
        
         if(p1.getEmail()!=null && p1.getPassw().equals(pw)) {
         	//Password is same
+        	response.addCookie(new Cookie("user", email)); // Persistent User
+        	
     		response.sendRedirect("feed");
         }
         else {
@@ -139,6 +168,30 @@ public class ControlServlet extends HttpServlet {
     p1=personDAO.getPerson(email);
     if(p1.getEmail()!=null) {	return true;    }
     else {	return false;	}
+    }
+    
+    private void post(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException  {
+    	Cookie ck[] = request.getCookies();
+    	
+    	String url = request.getParameter("url");
+    	String details = request.getParameter("details");
+    	String poster = ck[0].getValue(); //name:user
+    	Image newImage = new Image(url, details, poster);
+    	
+    	personDAO.post(newImage);
+    	
+    }
+    
+    private void follow(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException  {
+    	Cookie ck[] = request.getCookies();
+    	
+    	String idol = request.getParameter("idol");
+    	String fan = ck[0].getValue(); //name:user
+    	Follower newFollower = new Follower(idol, fan);
+    	
+    	personDAO.follow(newFollower);
     }
    
 

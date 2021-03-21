@@ -9,6 +9,7 @@
 <body>
 <h2 style= "text-align: center;">Feed Page</h2>
 
+<a href="profilePage.jsp">Profile Page</a>
 <form action="resetDatabase" method="post">
     <input type="submit" value="Initialize Database" />
 </form>

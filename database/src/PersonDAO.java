@@ -103,5 +103,44 @@ public class PersonDAO {
         return person;
     }
     
+    // No tags yet
+    public boolean post(Image image) throws SQLException{
+    	String sql1 = "INSERT INTO image (url, detail, poster) VALUES (?, ?, ?);";
+    	
+    	preparedStatement = connect.prepareStatement(sql1);
+    	preparedStatement.setString(1, image.url);
+    	preparedStatement.setString(2, image.details);
+    	preparedStatement.setString(3, image.poster);
+    	    	
+    	boolean rowInserted = preparedStatement.executeUpdate() > 0;
+        preparedStatement.close();
+        return rowInserted;
+    }
+    
+    public boolean follow(Follower follower) throws SQLException{
+    	String sql1 = "SELECT idol FROM follower WHERE idol=" + follower.idol; //can you concatenate db query?
+    	String sql2 = "INSERT INTO follower (idol, fan) VALUES (?, ?)";
+    	String sql3 = "DELETE FROM follower WHERE idol=" + follower.idol;
+    	
+    	preparedStatement = connect.prepareStatement(sql1);
+    	//preparedStatement.setString(1, follower.idol);
+    	resultSet = preparedStatement.executeQuery();
+    	
+    	// If row !exists, add it
+    	if(!resultSet.next()) {
+    		preparedStatement = connect.prepareStatement(sql2);
+        	preparedStatement.setString(1, follower.idol);
+        	preparedStatement.setString(2, follower.fan);
+    	}
+    	// If row exists, delete it
+    	else
+    		preparedStatement = connect.prepareStatement(sql3);
+    	
+    	boolean rowInserted = preparedStatement.executeUpdate() > 0;
+    	resultSet.close();
+        preparedStatement.close();
+        return rowInserted;
+    }
+    
    
 }

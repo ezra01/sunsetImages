@@ -4,13 +4,21 @@ public class Image {
 	protected String url;
 	protected String details;
 	protected String created;
+	protected String poster;
 	
 	public Image() {}
-	public Image(int imgId, String url,String details, String created) {
+	public Image(int imgId, String url,String details, String created, String poster) {
 		this.imgId = imgId;
 		this.url = url;
 		this.details = details;
 		this.created = created;
+		this.poster = poster;
+	}
+	
+	public Image(String url,String details, String poster) {
+		this.url = url;
+		this.details = details;
+		this.poster = poster;
 	}
 
 	public int getImgId() { return imgId;}
@@ -24,4 +32,7 @@ public class Image {
 
 	public String getcreated() { return created;}
 	public void setcreated(String created) { this.created = created;}
+
+	public String getposter() { return poster;}
+	public void setposter(String poster) { this.poster = poster;}
 }
