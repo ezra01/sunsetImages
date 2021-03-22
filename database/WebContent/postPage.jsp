@@ -7,6 +7,11 @@
 <title>Post</title>
 </head>
 <body>
+<nav>
+	<a href="profile">Profile</a>
+	<a href="feed">Feed</a>
+	<a href="community">Community</a>
+</nav>
 <caption><h2>Post</h2></caption>
 	
 				
@@ -19,6 +24,10 @@
    		<tr>
           <th>Details</th>
           <td><input  type="text" name="details" size="50"></td>
+    	</tr>
+    	<tr>
+    	<th>Tags</th>
+          <td><input  type="text" name="tags" size="50"></td>
     	</tr>
     	<tr>
           <td colspan="2" align="center">

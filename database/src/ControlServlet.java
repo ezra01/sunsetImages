@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
  
 import javax.servlet.RequestDispatcher;
@@ -71,6 +72,9 @@ public class ControlServlet extends HttpServlet {
             case "/follow":
             	follow(request, response);
             	break;
+            case "/profile":
+            	showProfile(request,response);
+            	break;
             case "/resetDatabase":
             	// userShould be restricted or verified
         		System.out.println("started");
@@ -90,33 +94,59 @@ public class ControlServlet extends HttpServlet {
             throw new ServletException(ex);
         }
     }
-    // to show login page
+    // navigate to LOGIN page
     private void showLogin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("userLogin.jsp");
         dispatcher.forward(request, response);
     }
     
-    // to show registration page
+    // navigate to REGISTRATION page
     private void showRegistration(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("userRegistration.jsp");
         dispatcher.forward(request, response);
     }
+    // navigate to FEED page
     private void showFeed(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, SQLException {
+    	// get user information
+			Cookie ck[] = request.getCookies();
+			PersonDAO persondao= new PersonDAO();
+		// get related user posts
+		ArrayList<Image> imageList = null;
+			imageList = persondao.getAllImages(ck[0].getValue());
+			request.setAttribute("imageList",imageList );
+    	
         RequestDispatcher dispatcher = request.getRequestDispatcher("feedPage.jsp");
         dispatcher.forward(request, response);
     }
     
+    // navigate to new POST page
     private void showPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("postPage.jsp");
         dispatcher.forward(request, response);
     }
-    
+    // navigate to PROFILE page
+    private void showProfile(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+    	// get user information
+    		Cookie ck[] = request.getCookies();
+    		PersonDAO persondao= new PersonDAO();
+    		Person person = new Person();
+    		
+    		person = persondao.getPerson(ck[0].getValue());
+    		request.setAttribute("person",person );
+    	// get user posts
+    		ArrayList<Image> imageList = null;
+    		imageList = persondao.getMyImages(ck[0].getValue());
+    		request.setAttribute("imageList",imageList );
+    		
+        RequestDispatcher dispatcher = request.getRequestDispatcher("profilePage.jsp");
+        dispatcher.forward(request, response);
+    }
     // after the data of a people are inserted, this method will be called to insert the new people into the DB
-    // 
     private void insertPerson(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
         String email = request.getParameter("email");

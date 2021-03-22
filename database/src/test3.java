@@ -153,7 +153,7 @@ public class test3  {
  }
  public static void run() {
 	    try { 
-	    String sqlDatabase = "DROP TABLE if exists follower, comments, posts, likes, contain, tag, image, person; ";
+	    String sqlDatabase = "DROP TABLE if exists posts,follower, comments, likes, contain, tag, image, person; ";
 	    String sqlCreate1 = "CREATE TABLE person(" + 
 	    		"email VARCHAR(100) NOT NULL," + 
 	    		"passw VARCHAR(40) NOT NULL," + 
@@ -167,10 +167,10 @@ public class test3  {
 	    		"imgId INT auto_increment NOT NULL," + 
 	    		"url VARCHAR(500) NOT NULL," + 
 	    		"details VARCHAR(500)," + 
-	    		"poster VARCHAR(100) NOT NULL" +
+	    		"poster VARCHAR(100) NOT NULL," +
 	    		"created TIMESTAMP DEFAULT CURRENT_TIMESTAMP," + 
-	    		"PRIMARY KEY(imgId)" +
-	    		"FOREIGN KEY(poster) REFERENCES person(email) ON DELETE CASCADE ON UPDATE CASCADE, " +
+	    		"PRIMARY KEY(imgId)," +
+	    		"FOREIGN KEY(poster) REFERENCES person(email) ON DELETE CASCADE ON UPDATE CASCADE " +
 	    		");";
 	    
 	    String sqlCreate3="CREATE TABLE tag(" + 
@@ -215,7 +215,7 @@ public class test3  {
 	    		"FOREIGN KEY(idol) REFERENCES person(email) ON DELETE CASCADE ON UPDATE CASCADE," + 
 	    		"FOREIGN KEY(fan) REFERENCES person(email) ON DELETE CASCADE ON UPDATE CASCADE" + 
 	    		");";
-	    String sqlInsert1 = "insert into  person(email, passw, fName, lName, gender, birthday) values (?, ?, ?, ?, ?, ?)";
+	    String sqlInsert1 = "insert into person(email, passw, fName, lName, gender, birthday) values (?, ?, ?, ?, ?, ?)";
 	      //System.out.println("Select a table and then print out its content.");
 	      // This will load the MySQL driver, each DB has its own driver
 	      // Class.forName("com.mysql.jdbc.Driver");
@@ -244,23 +244,8 @@ public class test3  {
 //	      statement.executeUpdate(sqlCreate6); // posts table
 	      statement.executeUpdate(sqlCreate7); // comments table
 	      statement.executeUpdate(sqlCreate8); // follower table
-	     //images
-	      List<String> imageList = new ArrayList<String>();
-	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1611095560396-89216a352761?ixid=MXwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80\",\"DocuSign from Unsplash.com\", \"tNelms@gmail.com\")");
-	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1614862053138-10ca7a58866e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1525&q=80\",\"Antelope Canyon (IG: @clay.banks)\", \"rHou@gmail.com\")");
-	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?ixid=MXwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80\",\"Dell XPS Designed to be the Best\", \"eProchaska@gmail.com\")");
-	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1614640005509-2b10151cf3b1?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80\",\"Kyoto,Japan Photo Courtesy of Riccardo Mancino\", \"rLeis@gmail.com\")");
-	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1614687150515-f82d2a1ce260?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80\",\"Photo Courtesy of Mitchel Luo\", \"eCrawford@gmail.com\")");
-	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1614620304143-4b762783a93d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80\",\"Photo Photo Courtesy of Alex Quezada\", \"bIwamoto@gmail.com\")");
-	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1614815099662-55eb56815d4d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80\",\"Photo Courtesy of Marco De Hevia\", \"lKirker@gmail.com\")");
-	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1610346915620-6819c46e0544?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80\",\"Photo Courtesy of Jack Irwin\", \"cLockwood@gmail.com\")");
-	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1614680889612-d82e69f49ea2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80\",\"Photo Courtesy of Liza Azorina\", \"iTheobald@gmail.com\")");
-	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1614694871663-f80b4e1decb6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80\",\"Photo Courtesy of Ingmar\", \"pRisser@gmail.com\")");
-	      for(String x: imageList) {
-	    	  statement.addBatch(x);
-	      }
-	      statement.executeBatch();
-	      //person
+	      
+	    //person
 	      Person person;
 	      List<Person> personList= new ArrayList<Person>();
 	      person= new Person();
@@ -286,7 +271,25 @@ public class test3  {
 	      	preparedStatement.addBatch();
 	      	}
 	      	preparedStatement.executeBatch();
-	      	
+	      
+	     //images
+	      List<String> imageList = new ArrayList<String>();
+	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1611095560396-89216a352761?ixid=MXwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80\",\"DocuSign from Unsplash.com\", \"tNelms@gmail.com\")");
+	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1614862053138-10ca7a58866e?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1525&q=80\",\"Antelope Canyon (IG: @clay.banks)\", \"rHou@gmail.com\")");
+	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1593642634402-b0eb5e2eebc9?ixid=MXwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80\",\"Dell XPS Designed to be the Best\", \"eProchaska@gmail.com\")");
+	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1614640005509-2b10151cf3b1?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80\",\"Kyoto,Japan Photo Courtesy of Riccardo Mancino\", \"rLeis@gmail.com\")");
+	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1614687150515-f82d2a1ce260?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80\",\"Photo Courtesy of Mitchel Luo\", \"eCrawford@gmail.com\")");
+	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1614620304143-4b762783a93d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80\",\"Photo Photo Courtesy of Alex Quezada\", \"bIwamoto@gmail.com\")");
+	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1614815099662-55eb56815d4d?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80\",\"Photo Courtesy of Marco De Hevia\", \"lKirker@gmail.com\")");
+	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1610346915620-6819c46e0544?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80\",\"Photo Courtesy of Jack Irwin\", \"cLockwood@gmail.com\")");
+	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1614680889612-d82e69f49ea2?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=934&q=80\",\"Photo Courtesy of Liza Azorina\", \"iTheobald@gmail.com\")");
+	      imageList.add(" insert into image(url,details, poster) values (\"https://images.unsplash.com/photo-1614694871663-f80b4e1decb6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80\",\"Photo Courtesy of Ingmar\", \"pRisser@gmail.com\")");
+	      imageList.add(" insert into image(url,details, poster) values(\"https://images.unsplash.com/photo-1612832164065-fc35ded2a291?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80\",\"Surface Stock\",\"bIwamoto@gmail.com\");");
+	      for(String x: imageList) {
+	    	  statement.addBatch(x);
+	      }
+	      statement.executeBatch();
+	      
 	      	// tag List
 	      	List<String> tagList = new ArrayList<String>();
 	      	 tagList.add("insert into tag(word) values (\"landscape\"),(\"animals\"),(\"beautiful\"),(\"cool\"),(\"creativity\"),(\"social\"),(\"bright\"),(\"vision\"),(\"passion\"),(\"morning\")");
@@ -336,7 +339,7 @@ public class test3  {
 			  statement.executeBatch();
 			// Posts List--Must be after image and person
 			  List<String> followerList = new ArrayList<String>();
-			  followerList.add("insert into follower(idol,fan) values(\"tNelms@gmail.com\",\"rHou@gmail.com\"),( \"rHou@gmail.com\",\"eProchaska@gmail.com\" ),(\"rLeis@gmail.com\" , \"bIwamoto@gmail.com\" ),( \"lKirker@gmail.com\", \"cLockwood@gmail.com\"),( \"cLockwood@gmail.com\", \"lKirker@gmail.com\" ),( \"cLockwood@gmail.com\",\"iTheobald@gmail.com\" ),( \"cLockwood@gmail.com\",\"rHou@gmail.com\" ),(\"iTheobald@gmail.com\" ,\"rHou@gmail.com\" ),(\"rHou@gmail.com\" ,\"pRisser@gmail.com\" ),( \"pRisser@gmail.com\", \"eProchaska@gmail.com\") ");
+			  followerList.add("insert into follower(idol,fan) values(\"tNelms@gmail.com\",\"rHou@gmail.com\"),( \"rHou@gmail.com\",\"eProchaska@gmail.com\" ),(\"rLeis@gmail.com\" , \"bIwamoto@gmail.com\" ),( \"lKirker@gmail.com\", \"cLockwood@gmail.com\"),( \"cLockwood@gmail.com\", \"lKirker@gmail.com\" ),( \"cLockwood@gmail.com\",\"iTheobald@gmail.com\" ),( \"cLockwood@gmail.com\",\"rHou@gmail.com\" ),(\"iTheobald@gmail.com\" ,\"rHou@gmail.com\" ),(\"rHou@gmail.com\" ,\"pRisser@gmail.com\" ),( \"pRisser@gmail.com\", \"eProchaska@gmail.com\"),(\"iTheobald@gmail.com\",\"bIwamoto@gmail.com\") ");
 			     for(String x: followerList) {
 				    statement.addBatch(x);
 				 	}
