@@ -114,9 +114,13 @@ public class ControlServlet extends HttpServlet {
 			Cookie ck[] = request.getCookies();
 			PersonDAO persondao= new PersonDAO();
 		// get related user posts
-		ArrayList<Image> imageList = null;
+			ArrayList<Image> imageList = null;
 			imageList = persondao.getAllImages(ck[0].getValue());
 			request.setAttribute("imageList",imageList );
+		//get Likes
+    		ArrayList<LikeInfo> likeList = null;
+    		likeList = persondao.getAllLikes(ck[0].getValue());
+    		request.setAttribute("likeList",likeList );
     	
         RequestDispatcher dispatcher = request.getRequestDispatcher("feedPage.jsp");
         dispatcher.forward(request, response);
@@ -142,6 +146,10 @@ public class ControlServlet extends HttpServlet {
     		ArrayList<Image> imageList = null;
     		imageList = persondao.getMyImages(ck[0].getValue());
     		request.setAttribute("imageList",imageList );
+    	//get Likes
+    		ArrayList<LikeInfo> likeList = null;
+    		likeList = persondao.getMyLikes(ck[0].getValue());
+    		request.setAttribute("likeList",likeList );
     		
         RequestDispatcher dispatcher = request.getRequestDispatcher("profilePage.jsp");
         dispatcher.forward(request, response);

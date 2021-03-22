@@ -19,7 +19,6 @@ import java.sql.ResultSet;
 //import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 /**
  * Servlet implementation class Connect
  */
@@ -138,6 +137,38 @@ public class PersonDAO {
          
         return imageList;
     }
+    public  ArrayList<LikeInfo>getAllLikes(String email) throws SQLException {
+        String sql = "select imgid,likeCount,boolResult from " + 
+        		"(select * from image left join follower on image.poster = follower.idol where follower.fan = ? or image.poster=? order by created) " + 
+        		"as a " + 
+        		"left join" + 
+        		"(select imgId as id,(select count(*) from likes where imgId=id) as likeCount, imgId in (select imgId from likes where email =? group by imgId)as boolResult from likes group by imgId) " + 
+        		"as b " + 
+        		"on a.imgId = b.id order by created;";
+         
+        connect_func();
+         
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, email);
+        preparedStatement.setString(2, email);
+        preparedStatement.setString(3, email);
+        
+        ResultSet resultSet = preparedStatement.executeQuery();
+        ArrayList<LikeInfo> likeInfoList = new ArrayList<LikeInfo>();
+        while (resultSet.next()) {
+        	int imgId = resultSet.getInt("imgId");
+        	int likeCount = resultSet.getInt("likeCount");
+            boolean boolResult = resultSet.getBoolean("boolResult");
+            System.out.println(imgId+" "+likeCount+" "+boolResult);
+            likeInfoList.add( new LikeInfo(imgId,likeCount,boolResult));
+        }
+        
+        resultSet.close();
+        preparedStatement.close();
+        disconnect();
+         
+        return likeInfoList;
+    }
     // read Images ONLY posted by user
     public ArrayList<Image> getMyImages(String email) throws SQLException {
         String sql = "SELECT * FROM image where poster = ? order by created;";
@@ -165,6 +196,37 @@ public class PersonDAO {
         disconnect();
          
         return imageList;
+    }
+    public  ArrayList<LikeInfo>getMyLikes(String email) throws SQLException {
+        String sql = "select imgid,likeCount,boolResult from " + 
+        		"(SELECT * FROM image where poster = ? order by created) " + 
+        		"as a " + 
+        		"left join " + 
+        		"(select imgId as id,(select count(*) from likes where imgId=id) as likeCount, imgId in (select imgId from likes where email =? group by imgId)as boolResult from likes group by imgId) " + 
+        		"as b " + 
+        		"on a.imgId = b.id order by created;";
+         
+        connect_func();
+         
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, email);
+        preparedStatement.setString(2, email);
+        
+        ResultSet resultSet = preparedStatement.executeQuery();
+        ArrayList<LikeInfo> likeInfoList = new ArrayList<LikeInfo>();
+        while (resultSet.next()) {
+        	int imgId = resultSet.getInt("imgId");
+        	int likeCount = resultSet.getInt("likeCount");
+            boolean boolResult = resultSet.getBoolean("boolResult");
+                  
+            likeInfoList.add( new LikeInfo(imgId,likeCount,boolResult));
+        }
+        
+        resultSet.close();
+        preparedStatement.close();
+        disconnect();
+         
+        return likeInfoList;
     }
     
     // No tags yet

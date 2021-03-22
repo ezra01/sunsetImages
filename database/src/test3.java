@@ -306,7 +306,7 @@ public class test3  {
 		      statement.executeBatch();
 		      // Likes List
 			  List<String> likesList = new ArrayList<String>();
-			  likesList.add("insert into likes(email,imgId) values (\"tNelms@gmail.com\",6),(\"bIwamoto@gmail.com\",4),(\"bIwamoto@gmail.com\",8),(\"lKirker@gmail.com\",9),(\"iTheobald@gmail.com\",10),(\"pRisser@gmail.com\",2),(\"rHou@gmail.com\",5),(\"cLockwood@gmail.com\",7),(\"iTheobald@gmail.com\",3),(\"iTheobald@gmail.com\",1)");
+			  likesList.add("insert into likes(email,imgId) values (\"tNelms@gmail.com\",6),(\"bIwamoto@gmail.com\",4),(\"bIwamoto@gmail.com\",6),(\"lKirker@gmail.com\",9),(\"iTheobald@gmail.com\",10),(\"pRisser@gmail.com\",2),(\"rHou@gmail.com\",5),(\"cLockwood@gmail.com\",7),(\"iTheobald@gmail.com\",3),(\"iTheobald@gmail.com\",1)");
 			     for(String x: likesList) {
 				    statement.addBatch(x);
 				 	}

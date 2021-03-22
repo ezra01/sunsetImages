@@ -20,10 +20,27 @@ ${person.email}<br>${person.gender}<br>${person.birthday}
 <table border="1" width="70%" align="center">
 <tr>
 	<th>My Posts</th>
+	<th>Likes</th>
+	<th>Edit</th>
 </tr>
-<c:forEach items="${imageList}" var="img">
+<c:forEach items="${imageList}" var="img" varStatus="indexNum">
 <tr>
 	<td><img style="height:200px;" src="${img.url}"alt="${img.details}"></img></td>
+	<td>
+		<c:choose>
+			<c:when test="${empty likeList[indexNum.index].likecount }">0</c:when> <%-- IDK WHY likecount works but likeCount does not.... --%>
+			<c:otherwise>${likeList[indexNum.index].likecount}</c:otherwise>
+		</c:choose>
+		Likes
+		<br>
+		<c:choose>
+			<c:when test="${likeList[indexNum.index].boolResult}"><button>Unlike</button></c:when>
+			<c:otherwise><button>Like</button></c:otherwise>
+		</c:choose>
+	</td>
+	<td>
+		
+	</td>
 </tr>
 </c:forEach>
 </table>
