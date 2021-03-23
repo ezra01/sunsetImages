@@ -32,11 +32,12 @@
 <tr>
 	
 	<td>
-			<div style="textalign:center">
+			<div style="textalign:center;max-width: 800px">
 				${x.created} <!--A. idk why these values are swapped -->
 				${x.poster}<!--B. idk why these values are swapped -->
 			<br>
 				<img style="height:200px;" src="${x.url}"alt="${x.details}"></img>
+				${x.details} 
 			</div>
 	</td>
 	<td>

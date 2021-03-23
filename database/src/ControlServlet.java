@@ -75,6 +75,9 @@ public class ControlServlet extends HttpServlet {
             case "/profile":
             	showProfile(request,response);
             	break;
+            case "/community":
+            	showCommunity(request,response);
+            	break;
             case "/resetDatabase":
             	// userShould be restricted or verified
         		System.out.println("started");
@@ -101,7 +104,18 @@ public class ControlServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
     
-    // navigate to REGISTRATION page
+    // navigate to COMMUNITY page
+    private void showCommunity(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+	    	// get All people
+			PersonDAO persondao = new PersonDAO();
+			ArrayList<Person> personList = null;
+			personList = persondao.getAllPeople();
+			request.setAttribute("personList",personList );
+        RequestDispatcher dispatcher = request.getRequestDispatcher("communityPage.jsp");
+        dispatcher.forward(request, response);
+    }
+ // navigate to REGISTRATION page
     private void showRegistration(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("userRegistration.jsp");

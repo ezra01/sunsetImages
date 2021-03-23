@@ -25,7 +25,7 @@ ${person.email}<br>${person.gender}<br>${person.birthday}
 </tr>
 <c:forEach items="${imageList}" var="img" varStatus="indexNum">
 <tr>
-	<td><img style="height:200px;" src="${img.url}"alt="${img.details}"></img></td>
+	<td><img style="height:200px;;max-width: 800px" src="${img.url}"alt="${img.details}"> ${img.details} </img></td>
 	<td>
 		<c:choose>
 			<c:when test="${empty likeList[indexNum.index].likecount }">0</c:when> <%-- IDK WHY likecount works but likeCount does not.... --%>

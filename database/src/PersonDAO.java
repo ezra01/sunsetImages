@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 //import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 /**
  * Servlet implementation class Connect
  */
@@ -104,7 +105,30 @@ public class PersonDAO {
          
         return person;
     }
-    
+    // return list of people
+    public ArrayList<Person> getAllPeople() throws SQLException {
+        String sql = "select * from person;";
+        Person person = null;
+        connect_func();
+    	ArrayList<Person> listPeople = new ArrayList<Person>();            
+        statement =  (Statement) connect.createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+        while (resultSet.next()) {
+        	String name = resultSet.getString("email");
+            String pw = resultSet.getString("passw");
+            String fname = resultSet.getString("fName");
+            String lname = resultSet.getString("lName");
+            String gender = resultSet.getString("gender");
+            Date dob = resultSet.getDate("birthday");
+            person = new Person(name,pw,fname,lname,gender,dob.toString());
+            listPeople.add(person);
+        }        
+        resultSet.close();
+        statement.close();         
+        disconnect();        
+        return listPeople;
+    }
+       
     // read Images related to user
     // 		-posts by user
     //		-posts by those following
@@ -159,7 +183,7 @@ public class PersonDAO {
         	int imgId = resultSet.getInt("imgId");
         	int likeCount = resultSet.getInt("likeCount");
             boolean boolResult = resultSet.getBoolean("boolResult");
-            System.out.println(imgId+" "+likeCount+" "+boolResult);
+            //System.out.println(imgId+" "+likeCount+" "+boolResult);
             likeInfoList.add( new LikeInfo(imgId,likeCount,boolResult));
         }
         
