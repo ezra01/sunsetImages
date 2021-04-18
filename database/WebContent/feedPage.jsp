@@ -39,16 +39,15 @@ function getTimeForURL(){
 		var xml = new XMLHttpRequest();
 		xml.onreadystatechange = function(){
 			if (this.readyState ==4 && this.status == 200){
-				document.getElementById(("counter"+num)).innerHTML=this.responseText+" Likes"; 
 				if(isUnlike){document.getElementById(num).innerHTML= "Like";}
 				else{document.getElementById(num).innerHTML= "Unlike";}
+				document.getElementById(("counter"+num)).innerHTML=this.responseText+" Likes";
 			}	
 		};
 		var url = ('<%=request.getContextPath()%>'+'/AjaxServlet?action='+likeStr+'&id='+num +'&time='+ getTimeForURL());
 		
 		xml.open('GET',url,false);
 		xml.send();
-		xml
 	}
 	</script>
 

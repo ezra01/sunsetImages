@@ -267,7 +267,6 @@ public class PersonDAO {
         resultSet.close();
         preparedStatement.close();
         disconnect();
-         
         return count;
     }
     

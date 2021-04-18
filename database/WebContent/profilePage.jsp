@@ -16,6 +16,37 @@
 <h2 style= "text-align: center;">${person.fName} ${person.lName}'s Profile</h2>
 <div class="userInformation">
 ${person.email}<br>${person.gender}<br>${person.birthday}
+
+
+<script type = "text/javascript">
+function getTimeForURL(){
+	  var dt = new Date();
+	  var strOutput = "";
+	  strOutput = dt.getHours() + "_" + dt.getMinutes() + "_" + dt.getSeconds() + "_" + dt.getMilliseconds();
+	  return strOutput;
+	 }
+function Like(){
+	
+	var num = arguments[0];
+	var likeStr = document.getElementById(num).innerHTML.trim();
+	var isUnlike;
+	if(likeStr=="Like"){isUnlike = false;}
+	else{isUnlike = true;}
+	
+	var xml = new XMLHttpRequest();
+	xml.onreadystatechange = function(){
+		if (this.readyState ==4 && this.status == 200){
+			if(isUnlike){document.getElementById(num).innerHTML= "Like";}
+			else{document.getElementById(num).innerHTML= "Unlike";}
+			document.getElementById(("counter"+num)).innerHTML=this.responseText+" Likes";
+		}	
+	};
+	var url = ('<%=request.getContextPath()%>'+'/AjaxServlet?action='+likeStr+'&id='+num +'&time='+ getTimeForURL());
+	
+	xml.open('GET',url,false);
+	xml.send();
+}
+	</script>
 <!-- Posts -->
 <table border="1" width="70%" align="center">
 <tr>
@@ -27,16 +58,20 @@ ${person.email}<br>${person.gender}<br>${person.birthday}
 <tr>
 	<td><img style="height:200px;;max-width: 800px" src="${img.url}"alt="${img.details}"> ${img.details} </img></td>
 	<td>
+		<div id="counter${x.imgId}">
 		<c:choose>
 			<c:when test="${empty likeList[indexNum.index].likecount }">0</c:when> <%-- IDK WHY likecount works but likeCount does not.... --%>
 			<c:otherwise>${likeList[indexNum.index].likecount}</c:otherwise>
 		</c:choose>
 		Likes
+		</div>
 		<br>
-		<c:choose>
-			<c:when test="${likeList[indexNum.index].boolResult}"><button>Unlike</button></c:when>
-			<c:otherwise><button>Like</button></c:otherwise>
-		</c:choose>
+		<button id="${img.imgId}" onclick="Like(this.id)">
+				<c:choose>
+					<c:when test="${likeList[indexNum.index].boolResult}">Unlike</c:when>
+					<c:otherwise>Like</c:otherwise>
+				</c:choose>
+			</button>
 	</td>
 	<td>
 		
