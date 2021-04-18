@@ -21,12 +21,42 @@
     <input type="submit" value="Initialize Database" />
 </form>
 
+<script type = "text/javascript">
+function getTimeForURL(){
+	  var dt = new Date();
+	  var strOutput = "";
+	  strOutput = dt.getHours() + "_" + dt.getMinutes() + "_" + dt.getSeconds() + "_" + dt.getMilliseconds();
+	  return strOutput;
+	 }
+	function Like(){
+		
+		var num = arguments[0];
+		var likeStr = document.getElementById(num).innerHTML.trim();
+		var isUnlike;
+		if(likeStr=="Like"){isUnlike = false;}
+		else{isUnlike = true;}
+		
+		var xml = new XMLHttpRequest();
+		xml.onreadystatechange = function(){
+			if (this.readyState ==4 && this.status == 200){
+				document.getElementById(("counter"+num)).innerHTML=this.responseText+" Likes"; 
+				if(isUnlike){document.getElementById(num).innerHTML= "Like";}
+				else{document.getElementById(num).innerHTML= "Unlike";}
+			}	
+		};
+		var url = ('<%=request.getContextPath()%>'+'/AjaxServlet?action='+likeStr+'&id='+num +'&time='+ getTimeForURL());
+		
+		xml.open('GET',url,false);
+		xml.send();
+		xml
+	}
+	</script>
+
 <!-- Posts -->
 <table border="1" width="70%" align="center">
 <tr>
 	<th>Feed</th>
 	<th>Like</th>
-	<th>Edit</th>
 </tr>
 <c:forEach items="${imageList}" var="x" varStatus="indexNum">
 <tr>
@@ -37,24 +67,28 @@
 				${x.poster}<!--B. idk why these values are swapped -->
 			<br>
 				<img style="height:200px;" src="${x.url}"alt="${x.details}"></img>
-				${x.details} 
+				${x.details} ${x.imgId}
 			</div>
 	</td>
 	<td>
-		<c:choose>
-			<c:when test="${empty likeList[indexNum.index].likecount }">0</c:when> <%-- IDK WHY likecount works but likeCount does not.... --%>
-			<c:otherwise>${likeList[indexNum.index].likecount}</c:otherwise>
-		</c:choose>
-		Likes
-		<br>
-		<c:choose>
-			<c:when test="${likeList[indexNum.index].boolResult}"><button>Unlike</button></c:when>
-			<c:otherwise><button>Like</button></c:otherwise>
-		</c:choose>
+		<div class="likeContainer" >
+			<div id="counter${x.imgId}">
+				<c:choose>
+					<c:when test="${empty likeList[indexNum.index].likecount }">0</c:when> <%-- IDK WHY likecount works but likeCount does not.... --%>
+					<c:otherwise>${likeList[indexNum.index].likecount}</c:otherwise>
+				</c:choose>
+				Likes
+			</div>
+			<br>
+			<button id="${x.imgId}" onclick="Like(this.id)">
+				<c:choose>
+					<c:when test="${likeList[indexNum.index].boolResult}">Unlike</c:when>
+					<c:otherwise>Like</c:otherwise>
+				</c:choose>
+			</button>
+		</div>
 	</td>
-	<td>
-		
-	</td>	
+
 	
 </tr>
 </c:forEach>

@@ -253,6 +253,24 @@ public class PersonDAO {
         return likeInfoList;
     }
     
+    public long getLike(int imgId) throws SQLException {
+        String sql = "select count(*) from likes where imgId=?";
+        connect_func();
+        long count = 0;
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setInt(1, imgId);
+        
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+        	count = resultSet.getLong("count(*)");
+        }
+        resultSet.close();
+        preparedStatement.close();
+        disconnect();
+         
+        return count;
+    }
+    
     // No tags yet
     
     // insert post / image
@@ -298,5 +316,30 @@ public class PersonDAO {
         return rowInserted;
     }
     
+ // insert Like
+    public boolean InsertLike(Likes x) throws SQLException{
+    	String sql = "INSERT INTO likes (email, imgId) VALUES (?, ?)";
+    	connect_func();
+    	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+    		preparedStatement = connect.prepareStatement(sql);
+        	preparedStatement.setString(1, x.email);
+        	preparedStatement.setInt(2, x.imgId);
+	    boolean rowInserted = preparedStatement.executeUpdate() > 0;
+	    preparedStatement.close();
+	    disconnect();
+	    return rowInserted;
+    }
+    public boolean DeleteLike(Likes x) throws SQLException{
+    	String sql = "DELETE from likes where email= ? AND imgId = ?";
+    	connect_func();
+    	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+    		preparedStatement = connect.prepareStatement(sql);
+        	preparedStatement.setString(1, x.email);
+        	preparedStatement.setInt(2, x.imgId);
+	    boolean rowDeleted = preparedStatement.executeUpdate() > 0;
+	    preparedStatement.close();
+	    disconnect();
+	    return rowDeleted;
+    }
    
 }

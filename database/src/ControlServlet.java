@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,6 +25,7 @@ import java.sql.PreparedStatement;
  * requests from the user.
  * @author www.codejava.net
  */
+
 public class ControlServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private PersonDAO personDAO;
@@ -89,7 +91,8 @@ public class ControlServlet extends HttpServlet {
             	
             	response.sendRedirect("feed");
             	break;
-            default:          	
+            default:
+            	System.out.println("Error?");
             	showLogin(request,response);
             	break;
             }
@@ -102,7 +105,7 @@ public class ControlServlet extends HttpServlet {
             throws ServletException, IOException {
         RequestDispatcher dispatcher = request.getRequestDispatcher("userLogin.jsp");
         dispatcher.forward(request, response);
-    }
+    } 
     
     // navigate to COMMUNITY page
     private void showCommunity(HttpServletRequest request, HttpServletResponse response)
