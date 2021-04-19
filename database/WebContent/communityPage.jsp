@@ -25,7 +25,7 @@ function getTimeForURL(){
 		
 		var followee = arguments[0].substring(4);
 		
-		var followStr = document.getElementById(followee).innerHTML.trim();
+		var followStr = document.getElementById(arguments[0]).innerHTML.trim();
 		var isFollowing;
 		if(followStr=="Follow"){isFollowing = true;}
 		else{isFollowing = false;}
@@ -33,11 +33,11 @@ function getTimeForURL(){
 		var xml = new XMLHttpRequest();
 		xml.onreadystatechange = function(){
 			if (this.readyState ==4 && this.status == 200){
-				if(isFollowing){document.getElementById(("fbtn"+followee)).innerHTML= "Like";}
-				else{document.getElementById(("fbtn"+followee)).innerHTML= "Unlike";}
+				if(isFollowing){document.getElementById(("fbtn"+followee)).innerHTML= "Unfollow";}
+				else{document.getElementById(("fbtn"+followee)).innerHTML= "Follow";}
 			}	
 		};
-		var url = ('<%=request.getContextPath()%>'+'/AjaxServlet?action=Follow'+'&id='+followee +'&time='+ getTimeForURL());
+		var url = ('<%=request.getContextPath()%>'+'/AjaxServlet?action=Follow&id='+followee +'&time='+ getTimeForURL());
 		
 		xml.open('GET',url,false);
 		xml.send();

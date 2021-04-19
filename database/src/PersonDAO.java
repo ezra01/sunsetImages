@@ -171,7 +171,7 @@ public class PersonDAO {
         while (resultSet.next()) {
         	String idol = resultSet.getString("idol");
         	String fan = resultSet.getString("fan");
-        			System.out.println(idol+" "+fan);
+        			// System.out.println(idol+" "+fan);
         	follow = new Follower(idol,fan);
         	listFollowers.add(follow);
         }        
@@ -339,27 +339,29 @@ public class PersonDAO {
         return rowInserted;
     }
     
-    // insert follow
+    // insert / delete follow
     public boolean follow(Follower follower) throws SQLException{
-    	String sql1 = "SELECT idol FROM follower WHERE idol='" + follower.idol +"'"; //can you concatenate db query?
+    	String sql1 = "SELECT idol FROM follower WHERE fan='"+follower.fan+"'AND idol = '"+follower.idol+"'"; //can you concatenate db query?
     	String sql2 = "INSERT INTO follower (idol, fan) VALUES (?, ?)";
-    	String sql3 = "DELETE FROM follower WHERE idol='" + follower.idol +"'";
+    	String sql3 = "DELETE FROM follower WHERE idol= ?";
     	
     	connect_func();
-    	preparedStatement = (PreparedStatement) connect.prepareStatement(sql1);
-    	//preparedStatement.setString(1, follower.idol);
-    	resultSet = preparedStatement.executeQuery();
-    	
+    	statement =  (Statement) connect.createStatement();
+        ResultSet resultSet = statement.executeQuery(sql1);
+
     	// If row !exists, add it
     	if(!resultSet.next()) {
-    		preparedStatement = connect.prepareStatement(sql2);
+    		statement.close();
+    		preparedStatement = (PreparedStatement) connect.prepareStatement(sql2);
         	preparedStatement.setString(1, follower.idol);
         	preparedStatement.setString(2, follower.fan);
     	}
     	// If row exists, delete it
-    	else
+    	else {
+    		statement.close();
     		preparedStatement = connect.prepareStatement(sql3);
-    	
+    		preparedStatement.setString(1, follower.idol);
+    	}
     	boolean rowInserted = preparedStatement.executeUpdate() > 0;
     	resultSet.close();
         preparedStatement.close();
