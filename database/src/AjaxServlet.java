@@ -43,6 +43,10 @@ public class AjaxServlet extends HttpServlet {
             	//System.out.println("UNlike Case!");
             	Unlike(request,response);
             	break;
+            case "Follow":
+            	System.out.println("Follow or Unfollow Case!");
+            	Follow(request,response);
+            	break;
             default:
             	break;
             }
@@ -80,8 +84,20 @@ public class AjaxServlet extends HttpServlet {
 	response.getWriter().print(personDAO.getLike(param2));
 }
 	
+	private void Follow(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+	 PersonDAO personDAO = new PersonDAO();
+	// Parameters
+		// User
+	Cookie ck[] = request.getCookies();
+	String user = ck[0].getValue();
+	int param2 = Integer.parseInt(request.getParameter("id"));
 	
+	//Method
+	//boolean isSucess =personDAO.InsertLike(new Likes(user,param2));
 	
-	
+	// Response
+	//response.getWriter().print(personDAO.getLike(param2));
+}
 
 }

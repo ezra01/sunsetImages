@@ -105,7 +105,7 @@ public class PersonDAO {
          
         return person;
     }
-    // return list of people
+    // return list of ALL people
     public ArrayList<Person> getAllPeople() throws SQLException {
         String sql = "select * from person;";
         Person person = null;
@@ -127,6 +127,58 @@ public class PersonDAO {
         statement.close();         
         disconnect();        
         return listPeople;
+    }
+    // return list of people
+    public ArrayList<Person> getCommunityPeople(String email) throws SQLException {
+    	// results match 'getCommunityFollowings()'
+        String sql = "select * from person where email <> 'root' and email <> ? order by lName,fName;";
+        Person person = null;
+        connect_func();
+    	ArrayList<Person> listPeople = new ArrayList<Person>();
+    	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, email);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+        	String name = resultSet.getString("email");
+            String pw = resultSet.getString("passw");
+            String fname = resultSet.getString("fName");
+            String lname = resultSet.getString("lName");
+            String gender = resultSet.getString("gender");
+            Date dob = resultSet.getDate("birthday");
+            	person = new Person(name,pw,fname,lname,gender,dob.toString());
+            	listPeople.add(person);
+        }        
+        resultSet.close();
+        preparedStatement.close();         
+        disconnect();        
+        return listPeople;
+    }
+    public ArrayList<Follower> getCommunityFollowings(String email) throws SQLException {
+    	// results match 'getCommunityPeople()'
+        String sql = "select idol,fan from "
+        		+ "(select email,fName,lName from person  ) "
+        		+ "as a left join "
+        		+ "(select idol,fan from follower where fan =?) "
+        		+ "as b on a.email = b.idol " + 
+        		"where email <> 'root' and email <> ? order by lName,fName;";
+        Follower follow = null;
+        connect_func();
+    	ArrayList<Follower> listFollowers = new ArrayList<Follower>();
+    	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, email);
+        preparedStatement.setString(2, email);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+        	String idol = resultSet.getString("idol");
+        	String fan = resultSet.getString("fan");
+        			System.out.println(idol+" "+fan);
+        	follow = new Follower(idol,fan);
+        	listFollowers.add(follow);
+        }        
+        resultSet.close();
+        preparedStatement.close();         
+        disconnect();        
+        return listFollowers;
     }
        
     // read Images related to user

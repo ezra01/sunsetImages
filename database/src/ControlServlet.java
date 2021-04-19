@@ -110,11 +110,17 @@ public class ControlServlet extends HttpServlet {
     // navigate to COMMUNITY page
     private void showCommunity(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-	    	// get All people
-			PersonDAO persondao = new PersonDAO();
+    		// get user information
+    				Cookie ck[] = request.getCookies();
+    				PersonDAO persondao = new PersonDAO();
+	    	// get All people - me and root
 			ArrayList<Person> personList = null;
-			personList = persondao.getAllPeople();
+			personList = persondao.getCommunityPeople(ck[0].getValue());
 			request.setAttribute("personList",personList );
+			// Get matching following info too
+			ArrayList<Follower> followList = null;
+			followList = persondao.getCommunityFollowings(ck[0].getValue());
+			request.setAttribute("followList",followList );	
         RequestDispatcher dispatcher = request.getRequestDispatcher("communityPage.jsp");
         dispatcher.forward(request, response);
     }

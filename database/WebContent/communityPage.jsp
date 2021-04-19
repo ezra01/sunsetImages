@@ -14,6 +14,38 @@
 </nav>
 <h2 align="center" style= "text-align: center;">Community Page</h2>
 
+<script type = "text/javascript">
+function getTimeForURL(){
+	  var dt = new Date();
+	  var strOutput = "";
+	  strOutput = dt.getHours() + "_" + dt.getMinutes() + "_" + dt.getSeconds() + "_" + dt.getMilliseconds();
+	  return strOutput;
+	 }
+	function Follow(){
+		
+		var followee = arguments[0].substring(4);
+		
+		var followStr = document.getElementById(followee).innerHTML.trim();
+		var isFollowing;
+		if(followStr=="Follow"){isFollowing = true;}
+		else{isFollowing = false;}
+		
+		var xml = new XMLHttpRequest();
+		xml.onreadystatechange = function(){
+			if (this.readyState ==4 && this.status == 200){
+				if(isFollowing){document.getElementById(("fbtn"+followee)).innerHTML= "Like";}
+				else{document.getElementById(("fbtn"+followee)).innerHTML= "Unlike";}
+			}	
+		};
+		var url = ('<%=request.getContextPath()%>'+'/AjaxServlet?action=Follow'+'&id='+followee +'&time='+ getTimeForURL());
+		
+		xml.open('GET',url,false);
+		xml.send();
+		
+		
+	}
+	</script>
+
 <!-- People -->
 <div style="border:0;width:70%;display:flex;flex-direction: column;">
 <c:forEach items="${personList}" var="x" varStatus="indexNum">
@@ -28,10 +60,12 @@
 					 
 				</div>
 				<div style="float:right;">
-				<c:choose>
-				<c:when test=""><button style="height:30px;">UnFollow</button></c:when>
-				<c:otherwise><button style="height:30px;">Follow</button></c:otherwise>
-				</c:choose>
+				<button id="fbtn${x.email}" style="height:30px;" onclick="Follow(this.id)">
+					<c:choose>
+						<c:when test="${followList[indexNum.index].idol!=NULL}">Unfollow</c:when>
+						<c:otherwise>Follow</c:otherwise>
+					</c:choose>
+				</button>
 				</div>
 			</div>
 </c:forEach>
