@@ -231,7 +231,7 @@ public class test3  {
 	    		"FOR EACH ROW " +
 	    		"BEGIN " +
 		    		"IF 3 <= (SELECT COUNT(*) " +
-			    		"FROM image " +
+			    		"FROM likes " +
 			    		"WHERE DATE(likeDate) = DATE(NEW.likeDate) AND " +
 			    		"email = NEW.email) THEN " +
 		    		"SIGNAL SQLSTATE '45000' " +

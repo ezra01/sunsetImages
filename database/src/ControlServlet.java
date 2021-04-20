@@ -93,6 +93,18 @@ public class ControlServlet extends HttpServlet {
             	
             	response.sendRedirect("feed");
             	break;
+            case "/cool":
+            case "/new":
+            case "/viral":
+            case "/poor":
+            	showRootImages(request, response);
+            	break;
+            case "/top":
+            case "/popular":
+            case "/positive":
+            case "/inactive":
+            	showRootUsers(request, response);
+            	break;
             default:
             	System.out.println("Error?");
             	showLogin(request,response);
@@ -153,6 +165,63 @@ public class ControlServlet extends HttpServlet {
     	
         RequestDispatcher dispatcher = request.getRequestDispatcher("feedPage.jsp");
         dispatcher.forward(request, response);
+    }
+    
+    // navigate to Root Images
+    private void showRootImages(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+    	// get user information
+			//Cookie ck[] = request.getCookies();
+			String user = request.getCookies()[0].getValue();
+			PersonDAO persondao= new PersonDAO();
+			RequestDispatcher dispatcher;
+			
+			// Verify
+			if(user.equals("root")) {
+				// get posts
+            	System.out.println("posts");
+					ArrayList<Image> imageList = null;
+					imageList = persondao.getRootImages(request.getServletPath());
+					request.setAttribute("imageList",imageList );
+				//get Likes
+		    		ArrayList<LikeInfo> likeList = null;
+		    		likeList = persondao.getRootLikes(request.getServletPath());
+		    		request.setAttribute("likeList",likeList );
+		    	//get comments
+		    		ArrayList<Comments> commentList = null;
+		    		commentList = persondao.getRootComments(request.getServletPath());
+		    		request.setAttribute("commentList", commentList);
+		    		
+		            dispatcher = request.getRequestDispatcher("rootImageQuery.jsp");
+		            dispatcher.forward(request, response);
+			}
+			else
+				showFeed(request, response);
+    	
+    }
+    
+    // navigate to Root Users
+    private void showRootUsers(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+    	// get user information
+			//Cookie ck[] = request.getCookies();
+			String user = request.getCookies()[0].getValue();
+			PersonDAO persondao= new PersonDAO();
+			RequestDispatcher dispatcher;
+			
+			// Verify
+			if(user.equals("root")) {
+				// get users
+					ArrayList<Person> userList = null;
+					userList = persondao.getRootUsers(request.getServletPath());
+					request.setAttribute("userList",userList );
+		    		
+		            dispatcher = request.getRequestDispatcher("rootUserQuery.jsp");
+		            dispatcher.forward(request, response);
+			}
+			else
+				showFeed(request, response);
+    	
     }
     
     // navigate to new POST page

@@ -297,6 +297,196 @@ public class PersonDAO {
         return imageList;
     }
     
+ // read root Images
+    // 		1. liked by at least 5 users
+    //		2. just posted TODAY
+    //		3. top 3 images who received the most number of likes
+    //		4. received zero likes and no comments
+    public ArrayList<Image> getRootImages(String path) throws SQLException {
+    	String sql = "SELECT * FROM image WHERE imgId IN(?);";
+    	
+ /*   	String sql1 = "SELECT * "
+    			+ "FROM image "
+    			+ "WHERE imgId IN ("
+    				+ "SELECT imgId "
+	    			+ "FROM likes "
+	    			+ "GROUP BY imgId "
+	    			+ "HAVING COUNT(email) >= 5);";
+    	
+    	String sql2 = "SELECT imgId "
+    			+ "FROM image "
+    			+ "WHERE DATE(created) = CURDATE();";
+    	
+    	String sql3 = "SELECT * "
+    			+ "FROM image "
+    			+ "WHERE imgId IN ("
+	    			+ "SELECT imgId "
+	    			+ "FROM likes "
+	    			+ "GROUP BY imgId "
+	    			+ "ORDER BY COUNT(email) DESC "
+	    			+ "LIMIT 3);";
+    	
+    	String sql4 = "SELECT * "
+    			+ "FROM image "
+    			+ "WHERE imgId NOT IN ("
+	    			+ "SELECT imgID "
+	    			+ "FROM comments) AND "
+    			+ "imgID NOT IN ( "
+	    			+ "SELECT imgID "
+	    			+ "FROM likes);";
+ */   	
+    	connect_func();
+
+    	resultSet = rootQueryHelper(sql, path);
+        
+        Image image = null;
+        ArrayList<Image> imageList = new ArrayList<Image>();
+        while (resultSet.next()) {
+        	int imgId = resultSet.getInt("imgId");
+        	String url = resultSet.getString("url");
+            String details = resultSet.getString("details");
+            String c = resultSet.getString("created");
+            String poster = resultSet.getString("poster");
+           
+            image = new Image(imgId,url,details,c,poster);
+            imageList.add(image);
+        }
+        
+        resultSet.close();
+        preparedStatement.close();
+        disconnect();
+         
+        return imageList;
+    }
+    
+ // read cool Images likes
+    public ArrayList<LikeInfo> getRootLikes(String path) throws SQLException {
+    	String sql = "select imgid,likeCount,boolResult from " + 
+        		"(?) " + 
+        		"as a " + 
+        		"left join" + 
+        		"(select imgId as id,(select count(*) from likes where imgId=id) as likeCount, imgId in (select imgId from likes group by imgId)as boolResult from likes group by imgId) " + 
+        		"as b " + 
+        		"on a.imgId = b.id order by created;";
+    	
+    	resultSet = rootQueryHelper(sql, path);
+        
+        ArrayList<LikeInfo> likeInfoList = new ArrayList<LikeInfo>();
+        while (resultSet.next()) {
+        	int imgId = resultSet.getInt("imgId");
+        	int likeCount = resultSet.getInt("likeCount");
+            boolean boolResult = resultSet.getBoolean("boolResult");
+            //System.out.println(imgId+" "+likeCount+" "+boolResult);
+            likeInfoList.add( new LikeInfo(imgId,likeCount,boolResult));
+        }
+        
+        resultSet.close();
+        preparedStatement.close();
+        disconnect();
+         
+        return likeInfoList;
+    }
+    
+ // read root Images comments
+    public ArrayList<Comments> getRootComments(String path) throws SQLException {
+    	String sql = "Select email,comments.imgId,detail from comments join (?) as temp on comments.imgId = temp.imgId ";
+        String sq = "SELECT * ";
+        resultSet = rootQueryHelper(sql, path);
+
+    	ArrayList<Comments> listComments = new ArrayList<Comments>(); 
+        Comments comment = null;
+        
+        while (resultSet.next()) {
+        	String email = resultSet.getString("email");
+        	int imgId = resultSet.getInt("imgId");
+            String detail = resultSet.getString("detail");
+           
+            comment = new Comments(email,imgId,detail);
+            listComments.add(comment);
+        }
+        
+        resultSet.close();
+        preparedStatement.close();
+        disconnect();      
+        return listComments;
+    }
+    
+    // read root users
+    // 		1. users that have the most number of postings
+    //		2. followed by at least 5 followers
+    //		3. give each image a like
+    //		4. never posted any image, followed any other user, and given any like or comment
+    public ArrayList<Person> getRootUsers(String path) throws SQLException {
+    	String sql = "SELECT * FROM person WHERE email IN (?);";
+
+    	resultSet = rootQueryHelper(sql, path);
+    	
+    	Person person = null;
+    	ArrayList<Person> listPeople = new ArrayList<Person>();
+    	
+        while (resultSet.next()) {
+        	String name = resultSet.getString("email");
+            String fname = resultSet.getString("fName");
+            String lname = resultSet.getString("lName");
+            String gender = resultSet.getString("gender");
+            Date dob = resultSet.getDate("birthday");
+
+        	person = new Person(name,fname,lname,gender,dob.toString());
+            listPeople.add(person);
+        }        
+        resultSet.close();
+        preparedStatement.close();         
+        disconnect();        
+        return listPeople;
+    }
+    
+    private ResultSet rootQueryHelper(String ps, String path) throws SQLException {
+    	// Image queries
+    	String sql1 = "SELECT imgId FROM image WHERE imgId IN (SELECT imgId FROM likes GROUP BY imgId HAVING COUNT(email) >= 5)";
+    	String sql2 = "SELECT imgId FROM image WHERE DATE(created) = CURDATE()";    	
+    	String sql3 = "SELECT imgId FROM likes GROUP BY imgId ORDER BY COUNT(email) DESC LIMIT 3";    	   	
+    	String sql4 = "SELECT imgId FROM image WHERE imgId NOT IN (SELECT imgID FROM comments";
+    	
+    	// User queries
+    	String sql5 = "SELECT poster FROM image GROUP BY poster HAVING COUNT(*) = (SELECT MAX(num) FROM (SELECT COUNT(*) AS num FROM image GROUP BY poster) AS temp);";
+    	String sql6 = "SELECT idol FROM follower GROUP BY idol HAVING COUNT(fan) >= 5;";
+    	String sql7 = "SELECT email FROM likes GROUP BY email HAVING COUNT(imgID) = (SELECT COUNT(imgID) FROM image);";
+    	String sql8 = "SELECT email FROM person WHERE email != 'root' AND email NOT IN (SELECT email FROM comments) AND email NOT IN (SELECT email FROM likes) AND email NOT IN (SELECT fan FROM follower) AND email NOT IN (SELECT posterFROM image);";
+    	
+    	connect_func();
+        
+    	preparedStatement = connect.prepareStatement(ps);
+        
+    	// Prepare statement based on servlet path
+        switch(path) {
+        case "/cool":
+        	preparedStatement.setString(1, sql1);
+        	break;
+        case "/new":
+        	preparedStatement.setString(1, sql2);
+        	break;
+        case "/viral":
+        	preparedStatement.setString(1, sql3);
+        	break;
+        case "/poor":
+        	preparedStatement.setString(1, sql4);
+        	break;
+        case "/top":
+        	preparedStatement.setString(1, sql5);
+        	break;
+        case "/popular":
+        	preparedStatement.setString(1, sql6);
+        	break;
+        case "/positive":
+        	preparedStatement.setString(1, sql7);
+        	break;
+        case "/inactive":
+        	preparedStatement.setString(1, sql8);
+        }
+        
+        return preparedStatement.executeQuery();
+    }
+    
     // Get all comments for a list of images ON FEED PAGE
     public ArrayList<Comments> getFeedComments(String username) throws SQLException {
         String sql = "Select email,comments.imgId,detail from comments join (SELECT imgid,url,details,created,poster from image left join follower on image.poster = follower.idol where follower.fan = ? or image.poster=? order by created) as temp on comments.imgId = temp.imgId ";        

@@ -14,37 +14,9 @@
 	<a href="feed">Feed</a>
 	<a href="community">Community</a>
 </nav>
-<h2 style= "text-align: center;">Feed Page</h2>
+<h2 style= "text-align: center;">Query Result</h2>
 
-<br><a href="postPage.jsp">Post Image</a>
 <br><br>
-
-<form action="resetDatabase" method="post">
-    <input type="submit" value="Reset Database" />
-</form>
-<a href="cool">Cool images</a>
-<form action="new" method="post">
-    <input type="submit" value="New images" />
-</form>
-<form action="viral" method="post">
-    <input type="submit" value="Viral images" />
-</form>
-<form action="poor" method="post">
-    <input type="submit" value="Poor images" />
-</form>
-<br>
-<form action="top" method="post">
-    <input type="submit" value="Top users" />
-</form>
-<form action="popular" method="post">
-    <input type="submit" value="Popular users" />
-</form>
-<form action="positive" method="post">
-    <input type="submit" value="Positive users" />
-</form>
-<form action="inactive" method="post">
-    <input type="submit" value="Inactive users" />
-</form>
 
 <script type = "text/javascript">
 function getTimeForURL(){
@@ -79,8 +51,7 @@ function getTimeForURL(){
 <!-- Posts -->
 <table border="1" width="70%" align="center">
 <tr>
-	<th>Feed</th>
-	<th>Like</th>
+	<th>Query</th>
 </tr>
 <c:forEach items="${imageList}" var="x" varStatus="indexNum">
 <tr>
@@ -102,7 +73,7 @@ function getTimeForURL(){
 				</c:if>
 			</c:forEach>
 	</td>
-	<td>
+	  <td>
 		<div class="likeContainer" >
 			<div id="counter${x.imgId}">
 				<c:choose>
@@ -120,7 +91,6 @@ function getTimeForURL(){
 			</button>
 		</div>
 	</td>
-
 	
 </tr>
 </c:forEach>
