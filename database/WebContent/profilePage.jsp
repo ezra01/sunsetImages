@@ -58,7 +58,16 @@ function Like(){
 </tr>
 <c:forEach items="${imageList}" var="img" varStatus="indexNum">
 <tr>
-	<td><img style="height:200px;;max-width: 800px" src="${img.url}"alt="${img.details}"> ${img.details} </img></td>
+	<td><img style="height:200px;;max-width: 800px" src="${img.url}"alt="${img.details}"> ${img.details} </img>
+		<br><c:forEach items="${commentList}" var="y" varStatus="yIndex">
+		
+				<c:if test="${img.imgId ==y.imgId}">
+					<br>
+					<div class="comment">${y.email}: ${y.detail}</div>
+				</c:if>
+			</c:forEach>
+	
+	</td>
 	<td>
 		<div id="counter${x.imgId}">
 		<c:choose>

@@ -269,7 +269,7 @@ public class PersonDAO {
     //		-posts by those following
     public ArrayList<Image> getAllImages(String email) throws SQLException {
         String sql = "SELECT * from image left join follower on image.poster = follower.idol where follower.fan = ? or image.poster=? order by created;";
-         
+        //SELECT imgid,url,details,created,poster from image left join follower on image.poster = follower.idol where follower.fan = ? or image.poster=? order by created
         connect_func();
          
         preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
@@ -296,6 +296,37 @@ public class PersonDAO {
          
         return imageList;
     }
+    
+    // Get all comments for a list of images ON FEED PAGE
+    public ArrayList<Comments> getFeedComments(String username) throws SQLException {
+        String sql = "Select email,comments.imgId,detail from comments join (SELECT imgid,url,details,created,poster from image left join follower on image.poster = follower.idol where follower.fan = ? or image.poster=? order by created) as temp on comments.imgId = temp.imgId ";        
+        
+        Person person = null;
+        connect_func();
+    	ArrayList<Comments> listComments = new ArrayList<Comments>();            
+    	  
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, username);
+        preparedStatement.setString(2, username);
+         
+        ResultSet resultSet = preparedStatement.executeQuery();
+        Comments comment = null;
+       
+        while (resultSet.next()) {
+        	String email = resultSet.getString("email");
+        	int imgId = resultSet.getInt("imgId");
+            String detail = resultSet.getString("detail");
+           
+            comment = new Comments(email,imgId,detail);
+            listComments.add(comment);
+        }
+        
+        resultSet.close();
+        preparedStatement.close();
+        disconnect();      
+        return listComments;
+    }
+    
     public  ArrayList<LikeInfo>getAllLikes(String email) throws SQLException {
         String sql = "select imgid,likeCount,boolResult from " + 
         		"(select * from image left join follower on image.poster = follower.idol where follower.fan = ? or image.poster=? order by created) " + 
@@ -355,6 +386,36 @@ public class PersonDAO {
         disconnect();
          
         return imageList;
+    }
+ // Get all comments for a list of images on PROFILE PAGE
+    public ArrayList<Comments> getProfileComments(String username) throws SQLException {
+        String sql = "Select email,comments.imgId,detail from comments join (SELECT imgid,url,details,created,poster FROM image where poster = ? order by created) as temp on comments.imgId = temp.imgId ";        
+        
+        Person person = null;
+        connect_func();
+    	ArrayList<Comments> listComments = new ArrayList<Comments>();            
+    	  
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, username);
+         
+        ResultSet resultSet = preparedStatement.executeQuery();
+        Comments comment = null;
+       
+        while (resultSet.next()) {
+        	String email = resultSet.getString("email");
+        	int imgId = resultSet.getInt("imgId");
+            String detail = resultSet.getString("detail");
+           
+            comment = new Comments(email,imgId,detail);
+            System.out.println(comment.detail);
+            listComments.add(comment);
+        }
+        
+        resultSet.close();
+        preparedStatement.close();
+        disconnect();
+        
+        return listComments;
     }
     public  ArrayList<LikeInfo>getMyLikes(String email) throws SQLException {
         String sql = "select imgid,likeCount,boolResult from " + 

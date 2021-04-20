@@ -144,6 +144,10 @@ public class ControlServlet extends HttpServlet {
     		ArrayList<LikeInfo> likeList = null;
     		likeList = persondao.getAllLikes(ck[0].getValue());
     		request.setAttribute("likeList",likeList );
+    	//get comments
+    		ArrayList<Comments> commentList = null;
+    		commentList = persondao.getFeedComments(ck[0].getValue());
+    		request.setAttribute("commentList", commentList);
     	
         RequestDispatcher dispatcher = request.getRequestDispatcher("feedPage.jsp");
         dispatcher.forward(request, response);
@@ -171,6 +175,10 @@ public class ControlServlet extends HttpServlet {
     		ArrayList<Image> imageList = null;
     		imageList = persondao.getMyImages(email);
     		request.setAttribute("imageList",imageList );
+    	// get comments
+    		ArrayList<Comments> commentList = null;
+    		commentList = persondao.getProfileComments(email);
+    		request.setAttribute("commentList", commentList);
     	//get Likes
     		ArrayList<LikeInfo> likeList = null;
     		likeList = persondao.getMyLikes(email);

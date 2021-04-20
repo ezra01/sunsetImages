@@ -70,6 +70,13 @@ function getTimeForURL(){
 				<img style="height:200px;" src="${x.url}"alt="${x.details}"></img>
 				${x.details} ${x.imgId}
 			</div>
+			
+			<c:forEach items="${commentList}" var="y" varStatus="yIndex">
+				<c:if test="${x.imgId ==y.imgId}">
+					<br>
+					<div class="comment">${y.email}: ${y.detail}</div>
+				</c:if>
+			</c:forEach>
 	</td>
 	<td>
 		<div class="likeContainer" >
