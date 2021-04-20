@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+     <%Cookie ck[] = request.getCookies(); %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,7 +10,7 @@
 </head>
 <body>
 <nav>
-	<a href="profile">Profile</a>
+	<a href="profile?username=<%=ck[0].getValue()%>">Profile</a>
 	<a href="feed">Feed</a>
 	<a href="community">Community</a>
 </nav>
@@ -62,8 +63,9 @@ function getTimeForURL(){
 	
 	<td>
 			<div style="textalign:center;max-width: 800px">
-				${x.created} <!--A. idk why these values are swapped -->
-				${x.poster}<!--B. idk why these values are swapped -->
+				 <!--A. idk why these values are swapped -->
+				<a href="${pageContext.request.contextPath}/profile?username=${x.poster}">${x.poster}</a>
+				${x.created}
 			<br>
 				<img style="height:200px;" src="${x.url}"alt="${x.details}"></img>
 				${x.details} ${x.imgId}
@@ -73,7 +75,7 @@ function getTimeForURL(){
 		<div class="likeContainer" >
 			<div id="counter${x.imgId}">
 				<c:choose>
-					<c:when test="${empty likeList[indexNum.index].likecount }">0</c:when> <%-- IDK WHY likecount works but likeCount does not.... --%>
+					<c:when test="${empty likeList[indexNum.index].likecount }">0</c:when> 
 					<c:otherwise>${likeList[indexNum.index].likecount}</c:otherwise>
 				</c:choose>
 				Likes

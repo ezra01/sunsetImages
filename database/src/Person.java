@@ -24,6 +24,14 @@ public class Person {
 		this.gender = gender;
 		this.birthday = birthday;
 	}
+	public Person(String email, String fName, String lName, String gender, String birthday) {
+		super();
+		this.email = email;
+		this.fName = fName;
+		this.lName = lName;
+		this.gender = gender;
+		this.birthday = birthday;
+	}
 	public Person(String email, String passw) {
 		super();
 		this.email = email;

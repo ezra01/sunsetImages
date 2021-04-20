@@ -76,7 +76,7 @@ public class ControlServlet extends HttpServlet {
             	break;
             case "/profile":
             	showProfile(request,response);
-            	break;
+            	break; 
             case "/community":
             	showCommunity(request,response);
             	break;
@@ -162,17 +162,36 @@ public class ControlServlet extends HttpServlet {
     		Cookie ck[] = request.getCookies();
     		PersonDAO persondao= new PersonDAO();
     		Person person = new Person();
+    	// email
+    		String email = request.getParameter("username");
     		
-    		person = persondao.getPerson(ck[0].getValue());
+    		person = persondao.getPerson(email);
     		request.setAttribute("person",person );
     	// get user posts
     		ArrayList<Image> imageList = null;
-    		imageList = persondao.getMyImages(ck[0].getValue());
+    		imageList = persondao.getMyImages(email);
     		request.setAttribute("imageList",imageList );
     	//get Likes
     		ArrayList<LikeInfo> likeList = null;
-    		likeList = persondao.getMyLikes(ck[0].getValue());
+    		likeList = persondao.getMyLikes(email);
     		request.setAttribute("likeList",likeList );
+		// get my fans / followers
+			ArrayList<Person> fanList = null;
+			fanList = persondao.getFans(email);
+			request.setAttribute("fanList",fanList );
+		// get count of fans
+			Long fanCount = null;
+			fanCount = persondao.getFanCount(email);
+			request.setAttribute("fanCount",fanCount );
+		// get my idols / followings
+			ArrayList<Person> idolList = null;
+			idolList = persondao.getIdols(email);
+			request.setAttribute("idolList",idolList );
+		// get count of idols
+			Long idolCount = null;
+			idolCount = persondao.getIdolCount(email);
+			request.setAttribute("idolCount",idolCount );
+			
     		
         RequestDispatcher dispatcher = request.getRequestDispatcher("profilePage.jsp");
         dispatcher.forward(request, response);

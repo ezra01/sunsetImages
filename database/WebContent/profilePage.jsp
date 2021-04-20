@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%Cookie ck[] = request.getCookies(); %> 
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,14 +10,15 @@
 </head>
 <body>
 <nav>
-	<a href="profile">Profile</a>
+	<a href="profile?username=<%=ck[0].getValue()%>">Profile</a>
 	<a href="feed">Feed</a>
 	<a href="community">Community</a>
 </nav>
 <h2 style= "text-align: center;">${person.fName} ${person.lName}'s Profile</h2>
+<h4 class="sectionTitle">My Info</h4>
 <div class="userInformation">
 ${person.email}<br>${person.gender}<br>${person.birthday}
-
+</div>
 
 <script type = "text/javascript">
 function getTimeForURL(){
@@ -48,7 +50,7 @@ function Like(){
 }
 	</script>
 <!-- Posts -->
-<table border="1" width="70%" align="center">
+<table border="1" width="60%" align="right">
 <tr>
 	<th>My Posts</th>
 	<th>Likes</th>
@@ -80,6 +82,46 @@ function Like(){
 </c:forEach>
 </table>
 <!-- end of posts -->
+<!-- Followers / Fans -->
+<h4 class="sectionTitle">Fans: ${fanCount}</h4>
+<div style="border:0;width:25%;display:flex;flex-direction: column;">
+<c:forEach items="${fanList}" var="x" varStatus="indexNum">
+			<a class ="personBtn"
+				href="${pageContext.request.contextPath}/profile?username=${x.email}"
+				style="float:left;text-decoration:none;width:200px;max-width:350px;margin:15px;padding:10px;background-color:SkyBlue;display:grid;"
+			>
+				<div style="textalign:center;font-size:14px;">
+					
+					${x.fName} 
+					<br>
+					${x.lName}
+					<br>
+					${x.email}
+					 
+				</div>
+			</a>
+</c:forEach>
 </div>
+<!-- end of Followers / Fans -->
+<!-- Followings / Idols -->
+<h4 class="sectionTitle">Idols:  ${idolCount}</h4>
+<div style="border:0;width:25%;display:flex;flex-direction: column;">
+<c:forEach items="${idolList}" var="x" varStatus="indexNum">
+			<a class ="personBtn"
+				href="${pageContext.request.contextPath}/profile?username=${x.email}"
+				style="float:left;text-decoration:none;width:200px;max-width:350px;margin:15px;padding:10px;background-color:SkyBlue;display:grid;"
+			>
+				<div style="textalign:center;font-size:14px;">
+					
+					${x.fName} 
+					<br>
+					${x.lName}
+					<br>
+				</div>
+			</a>
+</c:forEach>
+</div>
+<!-- end of Followers / Idols -->
+
 </body>
 </html>

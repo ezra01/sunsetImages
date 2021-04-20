@@ -152,7 +152,8 @@ public class PersonDAO {
         preparedStatement.close();         
         disconnect();        
         return listPeople;
-    }
+    }    
+    
     public ArrayList<Follower> getCommunityFollowings(String email) throws SQLException {
     	// results match 'getCommunityPeople()'
         String sql = "select idol,fan from "
@@ -180,6 +181,88 @@ public class PersonDAO {
         disconnect();        
         return listFollowers;
     }
+ // return list of people
+    public ArrayList<Person> getFans(String email) throws SQLException {
+    	//
+        String sql = "Select distinct email,fName,lName,gender,birthday from follower join person on follower.fan = person.email where idol = ?;";
+        Person person = null;
+        connect_func();
+    	ArrayList<Person> listPeople = new ArrayList<Person>();
+    	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, email);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+        	String name = resultSet.getString("email");
+            //String pw = resultSet.getString("passw");
+            String fname = resultSet.getString("fName");
+            String lname = resultSet.getString("lName");
+            String gender = resultSet.getString("gender");
+            Date dob = resultSet.getDate("birthday");
+            	person = new Person(name,fname,lname,gender,dob.toString());
+            	listPeople.add(person);
+        }        
+        resultSet.close();
+        preparedStatement.close();         
+        disconnect();        
+        return listPeople;
+    }
+ // return list of people
+    public ArrayList<Person> getIdols(String email) throws SQLException {
+    	//
+        String sql = "Select distinct email,fName,lName,gender,birthday from follower join person on follower.idol = person.email where fan = ?;";
+        Person person = null;
+        connect_func();
+    	ArrayList<Person> listPeople = new ArrayList<Person>();
+    	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, email);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+        	String name = resultSet.getString("email");
+            //String pw = resultSet.getString("passw");
+            String fname = resultSet.getString("fName");
+            String lname = resultSet.getString("lName");
+            String gender = resultSet.getString("gender");
+            Date dob = resultSet.getDate("birthday");
+            	person = new Person(name,fname,lname,gender,dob.toString());
+            	listPeople.add(person);
+        }        
+        resultSet.close();
+        preparedStatement.close();         
+        disconnect();        
+        return listPeople;
+    }
+    public long getFanCount(String email) throws SQLException {
+        String sql = "select count(*) from follower where idol=?";
+        connect_func();
+        long count = 0;
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, email);
+        
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+        	count = resultSet.getLong("count(*)");
+        }
+        resultSet.close();
+        preparedStatement.close();
+        disconnect();
+        return count;
+    }
+    public long getIdolCount(String email) throws SQLException {
+        String sql = "select count(*) from follower where fan=?";
+        connect_func();
+        long count = 0;
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, email);
+        
+        ResultSet resultSet = preparedStatement.executeQuery();
+        if (resultSet.next()) {
+        	count = resultSet.getLong("count(*)");
+        }
+        resultSet.close();
+        preparedStatement.close();
+        disconnect();
+        return count;
+    }
        
     // read Images related to user
     // 		-posts by user
@@ -203,7 +286,7 @@ public class PersonDAO {
             String c = resultSet.getString("created");
             String poster = resultSet.getString("poster");
            
-            image = new Image(imgId,url,details,poster,c);
+            image = new Image(imgId,url,details,c,poster);
             imageList.add(image);
         }
         

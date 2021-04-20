@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%> <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+<%Cookie ck[] = request.getCookies(); %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -8,7 +9,7 @@
 </head>
 <body>
 <nav>
-	<a href="profile">Profile</a>
+	<a href="profile?username=<%=ck[0].getValue()%>">Profile</a>
 	<a href="feed">Feed</a>
 	<a href="community">Community</a>
 </nav>
@@ -49,7 +50,10 @@ function getTimeForURL(){
 <!-- People -->
 <div style="border:0;width:70%;display:flex;flex-direction: column;">
 <c:forEach items="${personList}" var="x" varStatus="indexNum">
-			<div style="float:left;width:230px;max-width:350px;margin:15px;padding:10px;background-color:SkyBlue;display:grid;">
+			<a class ="personBtn"
+				href="${pageContext.request.contextPath}/profile?username=${x.email}"
+				style="float:left;text-decoration:none;width:200px;max-width:350px;margin:15px;padding:10px;background-color:SkyBlue;display:grid;"
+			>
 				<div style="textalign:center;font-size:14px;">
 					
 					${x.fName} 
@@ -67,7 +71,7 @@ function getTimeForURL(){
 					</c:choose>
 				</button>
 				</div>
-			</div>
+			</a>
 </c:forEach>
 </div>
 <!-- end of people -->
