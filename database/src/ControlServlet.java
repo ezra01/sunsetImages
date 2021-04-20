@@ -87,6 +87,8 @@ public class ControlServlet extends HttpServlet {
             		System.out.println("verified");
             		test3.run(); //Initialize database
             	}
+            	else
+            		System.out.println("unverified");
             	System.out.println("finished");
             	
             	response.sendRedirect("feed");

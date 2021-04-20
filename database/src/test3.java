@@ -190,6 +190,7 @@ public class test3  {
 	    String sqlCreate5 ="CREATE TABLE likes(" + 
 	    		"email VARCHAR(100) NOT NULL," + 
 	    		"imgId INT  NOT NULL," + 
+	    		"likeDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP," + 
 	    		"PRIMARY KEY(email, imgId)," + 
 	    		"FOREIGN KEY(email) REFERENCES person(email) ON DELETE CASCADE ON UPDATE CASCADE, " + 
 	    		"FOREIGN KEY(imgId) REFERENCES image(imgId)ON DELETE CASCADE ON UPDATE CASCADE" + 
@@ -215,6 +216,28 @@ public class test3  {
 	    		"FOREIGN KEY(idol) REFERENCES person(email) ON DELETE CASCADE ON UPDATE CASCADE," + 
 	    		"FOREIGN KEY(fan) REFERENCES person(email) ON DELETE CASCADE ON UPDATE CASCADE" + 
 	    		");";
+	    String sqlCreate9 = "CREATE TRIGGER dailyPosts BEFORE INSERT ON image " +
+	    		"FOR EACH ROW " +
+	    		"BEGIN " +
+		    		"IF 5 <= (SELECT COUNT(*) " +
+			    		"FROM image " +
+			    		"WHERE DATE(created) = DATE(NEW.created) AND " +
+			    		"poster = NEW.poster) THEN " +
+		    		"SIGNAL SQLSTATE '45000' " +
+		    		"SET MESSAGE_TEXT = 'Can’t post more than 5 images per day'; " +
+		    		"END IF; " +
+	    		"END;";
+	    String sqlCreate10 = "CREATE TRIGGER dailyLikes BEFORE INSERT ON likes " +
+	    		"FOR EACH ROW " +
+	    		"BEGIN " +
+		    		"IF 3 <= (SELECT COUNT(*) " +
+			    		"FROM image " +
+			    		"WHERE DATE(likeDate) = DATE(NEW.likeDate) AND " +
+			    		"email = NEW.email) THEN " +
+		    		"SIGNAL SQLSTATE '45000' " +
+		    		"SET MESSAGE_TEXT = 'Can’t like more than 3 images per day'; " +
+		    		"END IF; " +
+	    		"END;";
 	    String sqlInsert1 = "insert into person(email, passw, fName, lName, gender, birthday) values (?, ?, ?, ?, ?, ?)";
 	      //System.out.println("Select a table and then print out its content.");
 	      // This will load the MySQL driver, each DB has its own driver
@@ -244,6 +267,8 @@ public class test3  {
 //	      statement.executeUpdate(sqlCreate6); // posts table
 	      statement.executeUpdate(sqlCreate7); // comments table
 	      statement.executeUpdate(sqlCreate8); // follower table
+	      statement.executeUpdate(sqlCreate9); // dailyPosts trigger
+	      statement.executeUpdate(sqlCreate10); // dailyLikes trigger
 	      
 	    //person
 	      Person person;
