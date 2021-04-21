@@ -291,7 +291,7 @@ public class ControlServlet extends HttpServlet {
     		request.setAttribute("commentList", commentList);
     	//get Likes
     		ArrayList<LikeInfo> likeList = null;
-    		likeList = persondao.getMyLikes(email);
+    		likeList = persondao.getProfileLikes(email,ck[0].getValue());
     		request.setAttribute("likeList",likeList );
 		// get my fans / followers
 			ArrayList<Person> fanList = null;

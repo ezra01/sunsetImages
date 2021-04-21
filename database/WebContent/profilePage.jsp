@@ -69,12 +69,16 @@ function Like(){
 	
 	</td>
 	<td>
-		<div id="counter${x.imgId}">
-		<c:choose>
-			<c:when test="${empty likeList[indexNum.index].likecount }">0</c:when> <%-- IDK WHY likecount works but likeCount does not.... --%>
-			<c:otherwise>${likeList[indexNum.index].likecount}</c:otherwise>
-		</c:choose>
-		Likes
+		<div id="counter${img.imgId}">
+		<c:forEach items="${likeList}" var="y" varStatus="yIndex">
+			<c:if test="${img.imgId ==y.imgId}">
+				<c:choose>
+					<c:when test="${empty y.likecount}">0</c:when> 
+					<c:otherwise>${y.likecount}</c:otherwise>
+				</c:choose> 
+				Likes
+			</c:if>
+		</c:forEach>
 		</div>
 		<br>
 		<button id="${img.imgId}" onclick="Like(this.id)">

@@ -648,20 +648,21 @@ public class PersonDAO {
         
         return listComments;
     }
-    public  ArrayList<LikeInfo>getMyLikes(String email) throws SQLException {
+    public  ArrayList<LikeInfo>getProfileLikes(String profileEmail,String user) throws SQLException {
         String sql = "select imgid,likeCount,boolResult from " + 
-        		"(SELECT * FROM image where poster = ? order by created) " + 
-        		"as a " + 
+        		"(SELECT * FROM image where poster = ?) " + 
+        		"as a left join (select imgId as id,(select count(*) from likes where imgId=id) as likeCount, imgId in (select imgId from likes where email =? group by imgId)as boolResult from likes group by imgId) as b on a.imgId = b.id";
+        		/*"as a " + 
         		"left join " + 
         		"(select imgId as id,(select count(*) from likes where imgId=id) as likeCount, imgId in (select imgId from likes where email =? group by imgId)as boolResult from likes group by imgId) " + 
         		"as b " + 
-        		"on a.imgId = b.id order by created;";
-         
+        		"on a.imgId = b.id";
+         */
         connect_func();
          
         preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
-        preparedStatement.setString(1, email);
-        preparedStatement.setString(2, email);
+        preparedStatement.setString(1, profileEmail);
+        preparedStatement.setString(2, user);
         
         ResultSet resultSet = preparedStatement.executeQuery();
         ArrayList<LikeInfo> likeInfoList = new ArrayList<LikeInfo>();
