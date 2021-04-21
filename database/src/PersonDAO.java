@@ -40,7 +40,7 @@ public class PersonDAO {
     	 "SELECT poster FROM image GROUP BY poster HAVING COUNT(*) = (SELECT MAX(num) FROM (SELECT COUNT(*) AS num FROM image GROUP BY poster) AS temp)",
     	 "SELECT idol FROM follower GROUP BY idol HAVING COUNT(fan) >= 5",
     	 "SELECT email FROM likes GROUP BY email HAVING COUNT(imgID) = (SELECT COUNT(imgID) FROM image)",
-    	 "SELECT email FROM person WHERE email != 'root' AND email NOT IN (SELECT email FROM comments) AND email NOT IN (SELECT email FROM likes) AND email NOT IN (SELECT fan FROM follower) AND email NOT IN (SELECT posterFROM image)"
+    	 "SELECT email FROM person WHERE email != 'root' AND email NOT IN (SELECT email FROM comments) AND email NOT IN (SELECT email FROM likes) AND email NOT IN (SELECT fan FROM follower) AND email NOT IN (SELECT poster FROM image)"	//inactive
 
 	};
 	
@@ -427,7 +427,7 @@ public class PersonDAO {
     public ArrayList<Person> getRootUsers(String path) throws SQLException {
     	String sql = "SELECT * FROM person WHERE email IN (";
     	String sql2 = ");";
-    	//resultSet = USERrootQueryHelper(sql,sql2, path);
+    	resultSet = rootQueryHelper(sql,sql2, path);
     	
     	Person person = null;
     	ArrayList<Person> listPeople = new ArrayList<Person>();
@@ -464,7 +464,7 @@ public class PersonDAO {
         case "/poor":
         	ps=(ps+queryList[3]+ps2);
         	break;
-        case "/top":
+        case "/topUsers":
         	ps=(ps+queryList[4]+ps2);
         	break;
         case "/popular":
@@ -510,7 +510,7 @@ public class PersonDAO {
         case "/poor":
         	ps=(ps+queryList[3]+ps2);
         	break;
-        case "/top":
+        case "/topUsers":
         	ps=(ps+queryList[4]+ps2);
         	break;
         case "/popular":

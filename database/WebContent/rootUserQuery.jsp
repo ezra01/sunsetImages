@@ -60,7 +60,7 @@ function getTimeForURL(){
 			<div style="textalign:center;max-width: 800px">
 				 <!--A. idk why these values are swapped -->
 				<a href="${pageContext.request.contextPath}/profile?username=${x.email}">${x.email}</a>
-				${x.created}
+				
 			</div>
 	</td>
 	<td>
