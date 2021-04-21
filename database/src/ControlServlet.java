@@ -41,6 +41,7 @@ public class ControlServlet extends HttpServlet {
  
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	String queryDesc= null;
     	Cookie ck[] = request.getCookies();
     	String user = ck[0].getValue();
     	
@@ -94,15 +95,53 @@ public class ControlServlet extends HttpServlet {
             	response.sendRedirect("feed");
             	break;
             case "/cool":
-            case "/new":
-            case "/viral":
-            case "/poor":
+            	queryDesc="[Cool images]: List the images that are liked by at least 5 users. ";
+            	request.setAttribute("queryDesc", queryDesc);
             	showRootImages(request, response);
             	break;
-            case "/top":
+            case "/new":
+            	queryDesc="[New images]: List those images that are just posted TODAY. ";
+            	request.setAttribute("queryDesc", queryDesc);
+            	showRootImages(request, response);
+            	break;
+            case "/viral":
+            	queryDesc="[Viral images]: List the top 3 images who received the most number of likes, from the most to the least. ";
+            	request.setAttribute("queryDesc", queryDesc);
+            	showRootImages(request, response);
+            	break;
+            case "/poor":
+            	queryDesc="[Poor  images]:  List those images that nobody has given any like and nobody has given any comment.";
+            	request.setAttribute("queryDesc", queryDesc);
+            	showRootImages(request, response);
+            	break;
+            case "/topTag":
+            	queryDesc="[Top tags]: list those tags that are used by at least 3 users. ";
+            	request.setAttribute("queryDesc", queryDesc);
+            	//tags??
+            	break;
+            case "/topUsers":
+            	queryDesc="[Top users]: List users that have the most number of postings.  List the top user if there is no tie, list all the tied top users if there is a tie. ";
+            	request.setAttribute("queryDesc", queryDesc);
+            	showRootUsers(request, response);
+            	break;
+            case "/common":
+            	queryDesc=" [Common users]: Given two users, X, and Y, which are specified by the user with two dropdown menu lists, list the common users that both X and Y have followed.";
+            	request.setAttribute("queryDesc", queryDesc);
+            	showRootUsers(request, response);
+            	break;
             case "/popular":
+            	queryDesc="[Popular users]: List those users that  are followed by at least 5 followers.";
+            	request.setAttribute("queryDesc", queryDesc);
+            	showRootUsers(request, response);
+            	break;
             case "/positive":
+            	queryDesc="[Positive users]: List those users that give a like to each image that are posed by their followings.";
+            	request.setAttribute("queryDesc", queryDesc);
+            	showRootUsers(request, response);
+            	break;
             case "/inactive":
+            	queryDesc=" [Inactive users]:  List those users who have never posted any image, followed any other user, and given any like or comment.  ";
+            	request.setAttribute("queryDesc", queryDesc);
             	showRootUsers(request, response);
             	break;
             default:
@@ -185,7 +224,7 @@ public class ControlServlet extends HttpServlet {
 					request.setAttribute("imageList",imageList );
 				//get Likes
 		    		ArrayList<LikeInfo> likeList = null;
-		    		likeList = persondao.getRootLikes(request.getServletPath());
+		    		likeList = persondao.getRootLikes(request.getServletPath(),user);
 		    		request.setAttribute("likeList",likeList );
 		    	//get comments
 		    		ArrayList<Comments> commentList = null;

@@ -30,7 +30,19 @@ public class PersonDAO {
 	private Statement statement = null;
 	private PreparedStatement preparedStatement = null;
 	private ResultSet resultSet = null;
-	
+	private String queryList[]={
+		"SELECT imgId FROM image WHERE imgId IN (SELECT imgId FROM likes GROUP BY imgId HAVING COUNT(email) >= 5)",	//1
+		"SELECT imgId,created FROM image WHERE DATE(created) = CURDATE()", 	//2
+		"SELECT image.imgId FROM image join(SELECT imgId FROM likes group by imgId order by  Count(*) desc LIMIT 3)as l on l.imgId = image.imgId",   	 //viral  	
+    	" (SELECT imgId FROM image WHERE imgId NOT IN ((SELECT DISTINCT imgId FROM comments) union (select DISTINCT imgId from likes))) ",
+    	
+    	// User queries
+    	 "SELECT poster FROM image GROUP BY poster HAVING COUNT(*) = (SELECT MAX(num) FROM (SELECT COUNT(*) AS num FROM image GROUP BY poster) AS temp)",
+    	 "SELECT idol FROM follower GROUP BY idol HAVING COUNT(fan) >= 5",
+    	 "SELECT email FROM likes GROUP BY email HAVING COUNT(imgID) = (SELECT COUNT(imgID) FROM image)",
+    	 "SELECT email FROM person WHERE email != 'root' AND email NOT IN (SELECT email FROM comments) AND email NOT IN (SELECT email FROM likes) AND email NOT IN (SELECT fan FROM follower) AND email NOT IN (SELECT posterFROM image)"
+
+	};
 	
 	public PersonDAO() {
 
@@ -303,7 +315,8 @@ public class PersonDAO {
     //		3. top 3 images who received the most number of likes
     //		4. received zero likes and no comments
     public ArrayList<Image> getRootImages(String path) throws SQLException {
-    	String sql = "SELECT * FROM image WHERE imgId IN(?);";
+    	String sql = "SELECT imgId,url,details,created,poster FROM image WHERE imgId IN(";
+    	String sql2 = ")";
     	
  /*   	String sql1 = "SELECT * "
     			+ "FROM image "
@@ -335,9 +348,7 @@ public class PersonDAO {
 	    			+ "SELECT imgID "
 	    			+ "FROM likes);";
  */   	
-    	connect_func();
-
-    	resultSet = rootQueryHelper(sql, path);
+    	resultSet = rootQueryHelper(sql,sql2, path);
         
         Image image = null;
         ArrayList<Image> imageList = new ArrayList<Image>();
@@ -349,27 +360,24 @@ public class PersonDAO {
             String poster = resultSet.getString("poster");
            
             image = new Image(imgId,url,details,c,poster);
+            System.out.print(imgId+" ");
             imageList.add(image);
         }
         
         resultSet.close();
-        preparedStatement.close();
+        statement.close();
         disconnect();
          
         return imageList;
     }
     
  // read cool Images likes
-    public ArrayList<LikeInfo> getRootLikes(String path) throws SQLException {
-    	String sql = "select imgid,likeCount,boolResult from " + 
-        		"(?) " + 
-        		"as a " + 
-        		"left join" + 
-        		"(select imgId as id,(select count(*) from likes where imgId=id) as likeCount, imgId in (select imgId from likes group by imgId)as boolResult from likes group by imgId) " + 
-        		"as b " + 
-        		"on a.imgId = b.id order by created;";
+    public ArrayList<LikeInfo> getRootLikes(String path,String Username) throws SQLException {
+    	String sql = "select imgid,likeCount,boolResult from (" ;
+    	String sql2= 
+    		") as a left join (select imgId as id,(select count(*) from likes where imgId=id) as likeCount, imgId in (select imgId from likes where email =? group by imgId)as boolResult from likes group by imgId) as b on a.imgId = b.id";
     	
-    	resultSet = rootQueryHelper(sql, path);
+    	resultSet = LIKESrootQueryHelper(sql,sql2, path, Username);
         
         ArrayList<LikeInfo> likeInfoList = new ArrayList<LikeInfo>();
         while (resultSet.next()) {
@@ -389,9 +397,9 @@ public class PersonDAO {
     
  // read root Images comments
     public ArrayList<Comments> getRootComments(String path) throws SQLException {
-    	String sql = "Select email,comments.imgId,detail from comments join (?) as temp on comments.imgId = temp.imgId ";
-        String sq = "SELECT * ";
-        resultSet = rootQueryHelper(sql, path);
+    	String sql = "Select email,comments.imgId,detail from comments join (";
+    	String sql2 =")as temp on comments.imgId = temp.imgId;";
+        resultSet = rootQueryHelper(sql,sql2, path);
 
     	ArrayList<Comments> listComments = new ArrayList<Comments>(); 
         Comments comment = null;
@@ -406,7 +414,7 @@ public class PersonDAO {
         }
         
         resultSet.close();
-        preparedStatement.close();
+        statement.close();
         disconnect();      
         return listComments;
     }
@@ -417,9 +425,9 @@ public class PersonDAO {
     //		3. give each image a like
     //		4. never posted any image, followed any other user, and given any like or comment
     public ArrayList<Person> getRootUsers(String path) throws SQLException {
-    	String sql = "SELECT * FROM person WHERE email IN (?);";
-
-    	resultSet = rootQueryHelper(sql, path);
+    	String sql = "SELECT * FROM person WHERE email IN (";
+    	String sql2 = ");";
+    	//resultSet = USERrootQueryHelper(sql,sql2, path);
     	
     	Person person = null;
     	ArrayList<Person> listPeople = new ArrayList<Person>();
@@ -435,17 +443,50 @@ public class PersonDAO {
             listPeople.add(person);
         }        
         resultSet.close();
-        preparedStatement.close();         
+        statement.close();         
         disconnect();        
         return listPeople;
     }
     
-    private ResultSet rootQueryHelper(String ps, String path) throws SQLException {
+    private ResultSet rootQueryHelper(String ps,String ps2, String path) throws SQLException {
+    	connect_func();
+    	// Prepare statement based on servlet path
+        switch(path) {
+        case "/cool":
+        	ps=(ps+queryList[0]+ps2);
+        	break;
+        case "/new":
+        	ps=(ps+queryList[1]+ps2);
+        	break;
+        case "/viral":
+        	ps=(ps+queryList[2]+ps2);
+        	break;
+        case "/poor":
+        	ps=(ps+queryList[3]+ps2);
+        	break;
+        case "/top":
+        	ps=(ps+queryList[4]+ps2);
+        	break;
+        case "/popular":
+        	ps=(ps+queryList[5]+ps2);
+        	break;
+        case "/positive":
+        	ps=(ps+queryList[6]+ps2);
+        	break;
+        case "/inactive":
+        	ps=(ps+queryList[7]+ps2);
+        }
+        System.out.println("RootSQLRequest: "+ps);
+        statement =  (Statement) connect.createStatement();
+        return statement.executeQuery(ps);
+    }
+    // *** The LIKE query helper has to be different because it uses preparedStatement to check if the user liked teh post**
+    private ResultSet LIKESrootQueryHelper(String ps,String ps2, String path,String Username) throws SQLException {
     	// Image queries
-    	String sql1 = "SELECT imgId FROM image WHERE imgId IN (SELECT imgId FROM likes GROUP BY imgId HAVING COUNT(email) >= 5)";
-    	String sql2 = "SELECT imgId FROM image WHERE DATE(created) = CURDATE()";    	
-    	String sql3 = "SELECT imgId FROM likes GROUP BY imgId ORDER BY COUNT(email) DESC LIMIT 3";    	   	
-    	String sql4 = "SELECT imgId FROM image WHERE imgId NOT IN (SELECT imgID FROM comments";
+    	String sql1 = "SELECT imgId,created FROM image WHERE imgId IN (SELECT imgId FROM likes GROUP BY imgId HAVING COUNT(email) >= 5)";
+    	String sql2 = "SELECT imgId,created FROM image WHERE DATE(created) = CURDATE()";    	
+    	String sql3 = "SELECT image.imgId FROM image join(SELECT imgId FROM likes group by imgId order by  Count(*) desc LIMIT 3)as l on l.imgId = image.imgId";    //viral	   	
+    	String sql4 = " (SELECT imgId FROM image WHERE imgId NOT IN ((SELECT DISTINCT imgId FROM comments) union (select DISTINCT imgId from likes)) ) ";
     	
     	// User queries
     	String sql5 = "SELECT poster FROM image GROUP BY poster HAVING COUNT(*) = (SELECT MAX(num) FROM (SELECT COUNT(*) AS num FROM image GROUP BY poster) AS temp);";
@@ -455,35 +496,35 @@ public class PersonDAO {
     	
     	connect_func();
         
-    	preparedStatement = connect.prepareStatement(ps);
-        
     	// Prepare statement based on servlet path
-        switch(path) {
+    	switch(path) {
         case "/cool":
-        	preparedStatement.setString(1, sql1);
+        	ps=(ps+queryList[0]+ps2);
         	break;
         case "/new":
-        	preparedStatement.setString(1, sql2);
+        	ps=(ps+queryList[1]+ps2);
         	break;
         case "/viral":
-        	preparedStatement.setString(1, sql3);
+        	ps=(ps+queryList[2]+ps2);
         	break;
         case "/poor":
-        	preparedStatement.setString(1, sql4);
+        	ps=(ps+queryList[3]+ps2);
         	break;
         case "/top":
-        	preparedStatement.setString(1, sql5);
+        	ps=(ps+queryList[4]+ps2);
         	break;
         case "/popular":
-        	preparedStatement.setString(1, sql6);
+        	ps=(ps+queryList[5]+ps2);
         	break;
         case "/positive":
-        	preparedStatement.setString(1, sql7);
+        	ps=(ps+queryList[6]+ps2);
         	break;
         case "/inactive":
-        	preparedStatement.setString(1, sql8);
+        	ps=(ps+queryList[7]+ps2);
         }
-        
+        System.out.println("RootSQLRequestLIKES: "+ps);
+        preparedStatement =  (PreparedStatement) connect.prepareStatement(ps);
+        preparedStatement.setString(1, Username);
         return preparedStatement.executeQuery();
     }
     

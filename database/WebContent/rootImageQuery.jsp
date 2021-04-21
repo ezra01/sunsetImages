@@ -15,7 +15,7 @@
 	<a href="community">Community</a>
 </nav>
 <h2 style= "text-align: center;">Query Result</h2>
-
+<h3 style= "text-align: center;">${queryDesc}</h3>
 <br><br>
 
 <script type = "text/javascript">
@@ -30,8 +30,8 @@ function getTimeForURL(){
 		var num = arguments[0];
 		var likeStr = document.getElementById(num).innerHTML.trim();
 		var isUnlike;
-		if(likeStr=="Like"){isUnlike = false;}
-		else{isUnlike = true;}
+		if(likeStr=="Like"){isUnlike = true;}
+		else{isUnlike = false;}
 		
 		var xml = new XMLHttpRequest();
 		xml.onreadystatechange = function(){
@@ -58,7 +58,6 @@ function getTimeForURL(){
 	
 	<td>
 			<div style="textalign:center;max-width: 800px">
-				 <!--A. idk why these values are swapped -->
 				<a href="${pageContext.request.contextPath}/profile?username=${x.poster}">${x.poster}</a>
 				${x.created}
 			<br>
@@ -76,11 +75,15 @@ function getTimeForURL(){
 	  <td>
 		<div class="likeContainer" >
 			<div id="counter${x.imgId}">
-				<c:choose>
-					<c:when test="${empty likeList[indexNum.index].likecount }">0</c:when> 
-					<c:otherwise>${likeList[indexNum.index].likecount}</c:otherwise>
-				</c:choose>
-				Likes
+				<c:forEach items="${likeList}" var="y" varStatus="yIndex">
+				<c:if test="${x.imgId ==y.imgId}">
+					<c:choose>
+						<c:when test="${empty y.likecount }">0</c:when> 
+						<c:otherwise>${y.likecount}</c:otherwise>
+					</c:choose>
+					Likes
+				</c:if>
+				</c:forEach>
 			</div>
 			<br>
 			<button id="${x.imgId}" onclick="Like(this.id)">

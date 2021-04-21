@@ -33,7 +33,7 @@
     <input type="submit" value="Poor images" />
 </form>
 <br>
-<form action="top" method="post">
+<form action="topUsers" method="post">
     <input type="submit" value="Top users" />
 </form>
 <form action="popular" method="post">
