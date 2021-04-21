@@ -267,8 +267,10 @@ public class test3  {
 //	      statement.executeUpdate(sqlCreate6); // posts table
 	      statement.executeUpdate(sqlCreate7); // comments table
 	      statement.executeUpdate(sqlCreate8); // follower table
-	      statement.executeUpdate(sqlCreate9); // dailyPosts trigger
-	      statement.executeUpdate(sqlCreate10); // dailyLikes trigger
+	      
+	      //MOVED THESE TO THE END
+	      //statement.executeUpdate(sqlCreate9); // dailyPosts trigger
+	      //statement.executeUpdate(sqlCreate10); // dailyLikes trigger
 	      
 	    //person
 	      Person person;
@@ -344,7 +346,9 @@ public class test3  {
 		      // Likes List
 			  List<String> likesList = new ArrayList<String>();
 			  likesList.add("insert into likes(email,imgId) values (\"tNelms@gmail.com\",6),(\"bIwamoto@gmail.com\",4),(\"bIwamoto@gmail.com\",6),(\"lKirker@gmail.com\",9),(\"iTheobald@gmail.com\",10),(\"pRisser@gmail.com\",2),(\"rHou@gmail.com\",5),(\"cLockwood@gmail.com\",7),(\"iTheobald@gmail.com\",3),(\"iTheobald@gmail.com\",1)");
-			     for(String x: likesList) {
+			  likesList.add("insert into likes(email,imgId) values (\"tNelms@gmail.com\",2),(\"bIwamoto@gmail.com\",2),(\"lKirker@gmail.com\",2),(\"iTheobald@gmail.com\",2),(\"cLockwood@gmail.com\",2)");
+   
+			  for(String x: likesList) {
 				    statement.addBatch(x);
 				 	}
 			  statement.executeBatch();
@@ -382,7 +386,13 @@ public class test3  {
 				    statement.addBatch(x);
 				 	}
 			  statement.executeBatch();	
-	      	
+	      	// TRIGGERS
+			  statement.executeUpdate(sqlCreate9); // dailyPosts trigger
+		      statement.executeUpdate(sqlCreate10); // dailyLikes trigger
+			  
+			  
+			  
+			  
 	    } catch (Exception e) {
 	         System.out.println(e);
 	    } finally {
