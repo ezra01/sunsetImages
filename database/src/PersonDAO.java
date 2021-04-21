@@ -35,9 +35,10 @@ public class PersonDAO {
 		"SELECT imgId FROM image WHERE DATE(created) = CURDATE()", 	//2
 		"SELECT image.imgId FROM image join(SELECT imgId FROM likes group by imgId order by  Count(*) desc LIMIT 3)as l on l.imgId = image.imgId",   	 //viral  	
     	" (SELECT imgId FROM image WHERE imgId NOT IN ((SELECT DISTINCT imgId FROM comments) union (select DISTINCT imgId from likes))) ",
-    	
+    	"SELECT a.idol from (Select * from follower where fan = ?)as a JOIN (Select * from follower where fan = ?)as b ON a.idol = b.idol",	//common
     	// User queries
     	 "SELECT poster FROM image GROUP BY poster HAVING COUNT(*) = (SELECT MAX(num) FROM (SELECT COUNT(*) AS num FROM image GROUP BY poster) AS temp)",
+    	 "",// TOP TAGS
     	 "SELECT idol FROM follower GROUP BY idol HAVING COUNT(fan) >= 5",
     	 "SELECT email FROM likes GROUP BY email HAVING COUNT(imgID) = (SELECT COUNT(imgID) FROM image)",
     	 "SELECT email FROM person WHERE email != 'root' AND email NOT IN (SELECT email FROM comments) AND email NOT IN (SELECT email FROM likes) AND email NOT IN (SELECT fan FROM follower) AND email NOT IN (SELECT poster FROM image)"	//inactive
@@ -447,6 +448,37 @@ public class PersonDAO {
         disconnect();        
         return listPeople;
     }
+    public ArrayList<Person> getCommonUsers(String a, String b) throws SQLException {
+    	String sql = "SELECT * FROM person WHERE email IN (";
+    	String sql2 = ");";
+    	String ps= null;
+    	ps=(sql+queryList[4]+sql2);
+    	System.out.println(ps);
+    	connect_func();
+    	preparedStatement =  (PreparedStatement) connect.prepareStatement(ps);
+    	System.out.println("debug 111");
+    	preparedStatement.setString(1, a);
+        preparedStatement.setString(2, b);
+        System.out.println("debug 222");
+        ResultSet resultSet = preparedStatement.executeQuery();
+    	Person person = null;
+    	ArrayList<Person> listPeople = new ArrayList<Person>();
+    	
+        while (resultSet.next()) {
+        	String name = resultSet.getString("email");
+            String fname = resultSet.getString("fName");
+            String lname = resultSet.getString("lName");
+            String gender = resultSet.getString("gender");
+            Date dob = resultSet.getDate("birthday");
+
+        	person = new Person(name,fname,lname,gender,dob.toString());
+            listPeople.add(person);
+        }        
+        resultSet.close();
+        preparedStatement.close();         
+        disconnect();        
+        return listPeople;
+    }
     
     private ResultSet rootQueryHelper(String ps,String ps2, String path) throws SQLException {
     	connect_func();
@@ -464,17 +496,23 @@ public class PersonDAO {
         case "/poor":
         	ps=(ps+queryList[3]+ps2);
         	break;
+       // case "/common":
+        //	ps=(ps+queryList[4]+ps2);
+        	//break;
         case "/topUsers":
-        	ps=(ps+queryList[4]+ps2);
-        	break;
-        case "/popular":
         	ps=(ps+queryList[5]+ps2);
         	break;
-        case "/positive":
+        case "/topTags":
         	ps=(ps+queryList[6]+ps2);
         	break;
-        case "/inactive":
+        case "/popular":
         	ps=(ps+queryList[7]+ps2);
+        	break;
+        case "/positive":
+        	ps=(ps+queryList[8]+ps2);
+        	break;
+        case "/inactive":
+        	ps=(ps+queryList[9]+ps2);
         }
         System.out.println("RootSQLRequest: "+ps);
         statement =  (Statement) connect.createStatement();
@@ -510,17 +548,23 @@ public class PersonDAO {
         case "/poor":
         	ps=(ps+queryList[3]+ps2);
         	break;
+       // case "/common":
+        //	ps=(ps+queryList[4]+ps2);
+        	//break;
         case "/topUsers":
-        	ps=(ps+queryList[4]+ps2);
-        	break;
-        case "/popular":
         	ps=(ps+queryList[5]+ps2);
         	break;
-        case "/positive":
+        case "/topTags":
         	ps=(ps+queryList[6]+ps2);
         	break;
-        case "/inactive":
+        case "/popular":
         	ps=(ps+queryList[7]+ps2);
+        	break;
+        case "/positive":
+        	ps=(ps+queryList[8]+ps2);
+        	break;
+        case "/inactive":
+        	ps=(ps+queryList[9]+ps2);
         }
         System.out.println("RootSQLRequestLIKES: "+ps);
         preparedStatement =  (PreparedStatement) connect.prepareStatement(ps);

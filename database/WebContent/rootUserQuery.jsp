@@ -15,7 +15,7 @@
 	<a href="community">Community</a>
 </nav>
 <h2 style= "text-align: center;">Query Result</h2>
-
+<h3 style= "text-align: center;">${queryDesc}</h3>
 <br><br>
 
 <script type = "text/javascript">

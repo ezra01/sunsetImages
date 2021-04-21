@@ -114,7 +114,7 @@ public class ControlServlet extends HttpServlet {
             	request.setAttribute("queryDesc", queryDesc);
             	showRootImages(request, response);
             	break;
-            case "/topTag":
+            case "/topTags":
             	queryDesc="[Top tags]: list those tags that are used by at least 3 users. ";
             	request.setAttribute("queryDesc", queryDesc);
             	//tags??
@@ -201,6 +201,10 @@ public class ControlServlet extends HttpServlet {
     		ArrayList<Comments> commentList = null;
     		commentList = persondao.getFeedComments(ck[0].getValue());
     		request.setAttribute("commentList", commentList);
+    	// get all users
+    		ArrayList<Person> userList =null;
+    		userList = persondao.getAllPeople();
+    		request.setAttribute("userList", userList);
     	
         RequestDispatcher dispatcher = request.getRequestDispatcher("feedPage.jsp");
         dispatcher.forward(request, response);
@@ -252,7 +256,9 @@ public class ControlServlet extends HttpServlet {
 			if(user.equals("root")) {
 				// get users
 					ArrayList<Person> userList = null;
-					userList = persondao.getRootUsers(request.getServletPath());
+					if(request.getServletPath().contains("/common")) 
+					{System.out.println("common user started!");userList = persondao.getCommonUsers(request.getParameter("commonA"), request.getParameter("commonB"));}
+					else { System.out.println(" started!");userList = persondao.getRootUsers(request.getServletPath());}
 					request.setAttribute("userList",userList );
 		    		
 		            dispatcher = request.getRequestDispatcher("rootUserQuery.jsp");

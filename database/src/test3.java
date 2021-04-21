@@ -285,6 +285,18 @@ public class test3  {
 	      personList.add(new Person("cLockwood@gmail.com", "pass8", "Carli", "Lockwood", "Female", "1996-12-05"));
 	      personList.add(new Person("iTheobald@gmail.com", "pass9", "Ignacio", "Theobald", "Male", "1998-12-03"));
 	      personList.add(new Person("pRisser@gmail.com", "pass10", "Phyllis", "Risser", "Female", "2000-05-18"));
+	      
+	      personList.add(new Person("sDaily@gmail.com", "pass0", "Scott", "Daily", "Male", "2003-10-01"));
+	      personList.add(new Person("jNeverwell@gmail.com", "pass0", "Janice", "Neverwell", "Female", "1987-11-19"));
+	      personList.add(new Person("tRed@gmail.com", "pass0", "Trixie", "Red", "Female", "1999-06-18"));
+	      personList.add(new Person("rChildman@gmail.com", "pass0", "Reid", "Childman", "Male", "1965-04-20"));
+	      personList.add(new Person("tOak@gmail.com", "pass0", "Taylor", "Oak", "Female", "2003-05-18"));
+	      personList.add(new Person("pFrench@gmail.com", "pass0", "Phillip", "French", "Male", "2007-03-11"));
+	      personList.add(new Person("lStoppal@gmail.com", "pass0", "Leah", "Stoppal", "Female", "1985-02-18"));
+	      personList.add(new Person("cBalelock@gmail.com", "pass0", "Christopher", "Balelock", "Male", "1994-01-27"));
+	      personList.add(new Person("cCorsair@gmail.com", "pass0", "Candy", "Corsair", "Female", "1992-12-08"));
+	      personList.add(new Person("rLeather@gmail.com", "pass0", "Ryan", "Leather", "Male", "1998-04-14"));
+	      
 	      	preparedStatement = connect.prepareStatement(sqlInsert1);
 	      	for(Person x: personList) {
 	      		preparedStatement.setString(1, x.getEmail());
@@ -365,7 +377,8 @@ public class test3  {
 			// Posts List--Must be after image and person
 			  List<String> followerList = new ArrayList<String>();
 			  followerList.add("insert into follower(idol,fan) values(\"tNelms@gmail.com\",\"rHou@gmail.com\"),( \"rHou@gmail.com\",\"eProchaska@gmail.com\" ),(\"rLeis@gmail.com\" , \"bIwamoto@gmail.com\" ),( \"lKirker@gmail.com\", \"cLockwood@gmail.com\"),( \"cLockwood@gmail.com\", \"lKirker@gmail.com\" ),( \"cLockwood@gmail.com\",\"iTheobald@gmail.com\" ),( \"cLockwood@gmail.com\",\"rHou@gmail.com\" ),(\"iTheobald@gmail.com\" ,\"rHou@gmail.com\" ),(\"rHou@gmail.com\" ,\"pRisser@gmail.com\" ),( \"pRisser@gmail.com\", \"eProchaska@gmail.com\"),(\"iTheobald@gmail.com\",\"bIwamoto@gmail.com\") ");
-			     for(String x: followerList) {
+			  followerList.add("insert into follower(idol,fan) values(\"tNelms@gmail.com\",\"sDaily@gmail.com\"),(\"tNelms@gmail.com\",\"pFrench@gmail.com\"),(\"tNelms@gmail.com\",\"tOak@gmail.com\"),(\"tNelms@gmail.com\",\"rChildman@gmail.com\"),(\"tNelms@gmail.com\",\"tRed@gmail.com\"),(\"tNelms@gmail.com\",\"jNeverwell@gmail.com\")");
+			  for(String x: followerList) {
 				    statement.addBatch(x);
 				 	}
 			  statement.executeBatch();	
