@@ -32,7 +32,7 @@ public class PersonDAO {
 	private ResultSet resultSet = null;
 	private String queryList[]={
 		"SELECT imgId FROM image WHERE imgId IN (SELECT imgId FROM likes GROUP BY imgId HAVING COUNT(email) >= 5)",	//1
-		"SELECT imgId,created FROM image WHERE DATE(created) = CURDATE()", 	//2
+		"SELECT imgId FROM image WHERE DATE(created) = CURDATE()", 	//2
 		"SELECT image.imgId FROM image join(SELECT imgId FROM likes group by imgId order by  Count(*) desc LIMIT 3)as l on l.imgId = image.imgId",   	 //viral  	
     	" (SELECT imgId FROM image WHERE imgId NOT IN ((SELECT DISTINCT imgId FROM comments) union (select DISTINCT imgId from likes))) ",
     	
