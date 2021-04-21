@@ -814,5 +814,17 @@ public class PersonDAO {
 	    disconnect();
 	    return rowDeleted;
     }
+    public boolean deleteImage(String imgId,String email) throws SQLException{
+    	String sql = "DELETE from image where poster= ? AND imgId = ?";
+    	connect_func();
+    	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+    		preparedStatement = connect.prepareStatement(sql);
+        	preparedStatement.setString(1, email);
+        	preparedStatement.setString(2, imgId);
+	    boolean rowDeleted = preparedStatement.executeUpdate() > 0;
+	    preparedStatement.close();
+	    disconnect();
+	    return rowDeleted;
+    }
    
 }

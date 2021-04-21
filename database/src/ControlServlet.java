@@ -144,6 +144,14 @@ public class ControlServlet extends HttpServlet {
             	request.setAttribute("queryDesc", queryDesc);
             	showRootUsers(request, response);
             	break;
+            case "/deletePost":
+            	deletePost(request,response);
+            	response.sendRedirect("feed");
+            	break;
+            case "/editPost":
+            	editPost(request,response);
+            	response.sendRedirect("feed");
+            	break;
             default:
             	System.out.println("Error?");
             	showLogin(request,response);
@@ -382,8 +390,30 @@ public class ControlServlet extends HttpServlet {
     	String details = request.getParameter("details");
     	String poster = ck[0].getValue(); //name:user
     	Image newImage = new Image(url, details, poster);
-    	
+    	//tags
     	personDAO.post(newImage);
+    	
+    }
+    private void deletePost(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException  {
+    	Cookie ck[] = request.getCookies();
+    	//check if user is the poster
+    	String poster = ck[0].getValue(); //name:user
+    	
+    	//
+    	personDAO.deleteImage(request.getParameter("id"),ck[0].getValue());
+    	//personDAO.post(newImage);
+    }
+    private void editPost(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException  {
+    	Cookie ck[] = request.getCookies();
+    	
+    	//String url = request.getParameter("url");
+    	//String details = request.getParameter("details");
+    	//String poster = ck[0].getValue(); //name:user
+    	//Image newImage = new Image(url, details, poster);
+    	
+    	//personDAO.post(newImage);
     	
     }
     

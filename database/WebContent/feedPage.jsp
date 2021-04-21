@@ -19,51 +19,52 @@
 <br><a href="postPage.jsp">Post Image</a>
 <br><br>
 
-<form action="resetDatabase" method="post">
-    <input type="submit" value="Reset Database" />
-</form>
-<a href="cool">Cool images</a>
-<form action="new" method="post">
-    <input type="submit" value="New images" />
-</form>
-<form action="viral" method="post">
-    <input type="submit" value="Viral images" />
-</form>
-<form action="poor" method="post">
-    <input type="submit" value="Poor images" />
-</form>
-<br>
-<div style="border:1;background-color:creme;">
-	<form action="common" method="post">
-	<select id="commonB" name="commonB">
-	<c:forEach items="${userList}" var="x" varStatus="indexNum">
-	  <option value="${x.email}">${x.fName}</option>
-	  </c:forEach>
-	</select>
-	<select name="commonA" id="commonA">
-	<c:forEach items="${userList}" var="x" varStatus="indexNum">
-	  <option value="${x.email}">${x.fName}</option>
-	  </c:forEach>
-	</select>
 	
-	    <input type="submit" value="Common Users" />
-</form>
-</div>
-<form action="topUsers" method="post">
-    <input type="submit" value="Top users" />
-</form>
-<form action="topTags" method="post">
-    <input type="submit" value="Top tags" />
-</form>
-<form action="popular" method="post">
-    <input type="submit" value="Popular users" />
-</form>
-<form action="positive" method="post">
-    <input type="submit" value="Positive users" />
-</form>
-<form action="inactive" method="post">
-    <input type="submit" value="Inactive users" />
-</form>
+	<form action="resetDatabase" method="post">
+	    <input type="submit" value="Reset Database" />
+	</form>
+	<a href="cool">Cool images</a>
+	<form action="new" method="post">
+	    <input type="submit" value="New images" />
+	</form>
+	<form action="viral" method="post">
+	    <input type="submit" value="Viral images" />
+	</form>
+	<form action="poor" method="post">
+	    <input type="submit" value="Poor images" />
+	</form>
+	<br>
+	<div style="border:1;background-color:creme;">
+		<form action="common" method="post">
+		<select id="commonB" name="commonB">
+		<c:forEach items="${userList}" var="x" varStatus="indexNum">
+		  <option value="${x.email}">${x.fName}</option>
+		  </c:forEach>
+		</select>
+		<select name="commonA" id="commonA">
+		<c:forEach items="${userList}" var="x" varStatus="indexNum">
+		  <option value="${x.email}">${x.fName}</option>
+		  </c:forEach>
+		</select>
+		
+		    <input type="submit" value="Common Users" />
+	</form>
+	</div>
+	<form action="topUsers" method="post">
+	    <input type="submit" value="Top users" />
+	</form>
+	<form action="topTags" method="post">
+	    <input type="submit" value="Top tags" />
+	</form>
+	<form action="popular" method="post">
+	    <input type="submit" value="Popular users" />
+	</form>
+	<form action="positive" method="post">
+	    <input type="submit" value="Positive users" />
+	</form>
+	<form action="inactive" method="post">
+	    <input type="submit" value="Inactive users" />
+	</form>
 
 <script type = "text/javascript">
 function getTimeForURL(){

@@ -89,7 +89,11 @@ function Like(){
 			</button>
 	</td>
 	<td>
-		
+		<form action="deletePost?id=${img.imgId}" method="post">
+    		<input type="submit" value="Delete Post" />
+		</form>
+		<form action="editPost?id=${img.imgId}" method="post">
+    		<input type="submit" value="Edit Post" />
 	</td>
 </tr>
 </c:forEach>
